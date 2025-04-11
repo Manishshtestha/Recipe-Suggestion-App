@@ -65,6 +65,16 @@ const IngredientsSelector = () => {
 							{toTitleCase(ingredient)}
 						</span>
 					))}
+					{selectedIngredients.length === 0 && (
+						<span className="text-gray-500 text-sm items-center mt-2">
+							No ingredients selected
+						</span>
+					)}
+					{selectedIngredients.length > 0 && (
+						<button className="rounded-full border px-2 mt-1 active:bg-red-600 active:text-black " onClick={() => setSelectedIngredients([])}>
+							Clear Selection
+						</button>
+					)}
 				</div>
 			</div>
 			<div className="w-full h-[40vh] overflow-y-auto p-2 rounded-lg shadow-lg">
