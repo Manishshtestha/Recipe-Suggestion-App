@@ -29,9 +29,11 @@ export default function RootLayout({
 		<html lang="en">
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				{<Aurora />}
-				{<Navbar />}
-				{children}
+				<div className="fixed top-0 left-0 w-full z-[10000]">
+					{<Aurora />}
+					{<Navbar />}
+				</div>
+				<div className="mt-[110px] pt-30">{children}</div>
 			</body>
 		</html>
 	);

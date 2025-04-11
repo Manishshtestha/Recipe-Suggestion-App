@@ -1,28 +1,21 @@
-//To create a ingredient selector component (The ingredients will be fetched from database later for now we will hardcode them) that will allow the user to select multiple ingredients and then display the selected ingredients in a list below the selector. The component should be responsive and should work on mobile devices as well. The component should be written in TypeScript and should use Tailwind CSS for styling. The component should be functional and should not use any class components. The component should be reusable and should not depend on any external libraries. The component should be written in a way that it can be easily integrated into any Next.js application. Eventhough using a checkbox the checkbox shouldn't be visible and when checked the background of the seleceted ingredient should change to green and the text should be white. The component should also have a hover effect that changes the background color to a lighter shade of green when hovered over. The component should also have a focus effect that changes the background color to a darker shade of green when focused on. The component should also have an active effect that changes the background color to a darker shade of green when clicked on. The component should also have a disabled state that changes the background color to a grey color when disabled. The component should also have an error state that changes the background color to a red color when there is an error. The component should also have a loading state that shows a loading spinner when loading. The component should also have a success state that shows a success message when successful. The component should also have a warning state that shows a warning message when there is a warning. The component should also have an info state that shows an info message when there is an info. The component should also have a default state that shows the default message when there is no state.
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { toTitleCase } from "../../utils";
+import ingredientGroupsData from "../../data/ingredientGroups";
+
+interface IngredientGroup {
+	group_name: string;
+	icon: string;
+	ingredients: string[];
+}
 
 const IngredientsSelector = () => {
 	const [selectedIngredients, setSelectedIngredients] = useState<string[]>(
 		[]
 	);
-	const [ingredients] = useState([
-		"Tomato",
-		"Potato",
-		"Onion",
-		"Garlic",
-		"Ginger",
-		"Carrot",
-		"Cucumber",
-		"Spinach",
-		"Broccoli",
-		"Cauliflower",
-		"Bell Pepper",
-		"Mushroom",
-		"Eggplant",
-		"Zucchini",
-		"Pumpkin",
-	]);
+	const [searchTerm, setSearchTerm] = useState("");
+	const [ingredientGroups] =
+		useState<IngredientGroup[]>(ingredientGroupsData);
 
 	const handleIngredientSelect = (ingredient: string) => {
 		setSelectedIngredients((prev) =>
@@ -31,28 +24,89 @@ const IngredientsSelector = () => {
 				: [...prev, ingredient]
 		);
 	};
+
+	const filteredGroups = useMemo(() => {
+		return ingredientGroups
+			.map((group) => ({
+				...group,
+				ingredients: group.ingredients.filter((ingredient) =>
+					ingredient.toLowerCase().includes(searchTerm.toLowerCase())
+				),
+			}))
+			.filter((group) => group.ingredients.length > 0);
+	}, [ingredientGroups, searchTerm]);
+
 	return (
-		<div>
-			<h2>Ingredients</h2>
-			<div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-9">
-				{ingredients.map((ingredient, index) => (
-					<label
-						key={index}
-						className={`flex items-center justify-center p-4 border rounded-lg cursor-pointer 
-							${
-								selectedIngredients.includes(ingredient)
-									? "bg-[#7cff67] text-black"
-									: "text-white hover:bg-green-200 hover:text-black focus:bg-green-300 active:bg-[#7cff67] disabled:bg-gray-300"
-							}`}>
-						<input
-							type="checkbox"
-							className="hidden"
-							checked={selectedIngredients.includes(ingredient)}
-							onChange={() => handleIngredientSelect(ingredient)}
-						/>
-						<span>{ingredient}</span>
-					</label>
-				))}
+		<div className="w-full border rounded-2xl p-4">
+			<div>
+				<h2 className="text-2xl font-bold mb-4">Ingredients</h2>
+				<div className="">
+					<input
+						type="text"
+						placeholder="Search ingredients..."
+						className="w-full p-2 pl-3 border rounded-full relative focus:outline-none"
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+					/>
+					{searchTerm && (
+						<button
+							className="rounded-full border px-4 py-2 z-20 absolute right-[97px] active:bg-red-600 active:text-black font-bold"
+							onClick={() => setSearchTerm("")}>
+							X
+						</button>
+					)}
+				</div>
+				<div className="flex flex-wrap">
+					{selectedIngredients.map((ingredient, index) => (
+						<span
+							key={index}
+							className="bg-white text-black px-2 py-1 rounded-full text-sm mr-2 mt-1"
+							onClick={() => handleIngredientSelect(ingredient)}>
+							{toTitleCase(ingredient)}
+						</span>
+					))}
+				</div>
+			</div>
+			<div className="w-full h-[40vh] overflow-y-auto p-2 rounded-lg shadow-lg">
+				{filteredGroups.map(
+					(group: IngredientGroup, groupIndex: number) => (
+						<div key={groupIndex} className="mb-3">
+							<h3 className="text-xl font-semibold mb-1 flex items-center">
+								{toTitleCase(group.group_name)}
+							</h3>
+							<div className="flex flex-wrap gap-2">
+								{group.ingredients.map(
+									(ingredient: string, index: number) => (
+										<label
+											key={`${groupIndex}-${index}`}
+											className={`flex items-center justify-center px-2 py-1 border rounded-full cursor-pointer 
+                  ${
+						selectedIngredients.includes(ingredient)
+							? "bg-[#7cff67] text-black"
+							: "text-white hover:bg-green-200 hover:text-black focus:bg-green-300 active:bg-[#7cff67] disabled:bg-gray-300 transition-all"
+					}`}>
+											<input
+												type="checkbox"
+												className="hidden"
+												checked={selectedIngredients.includes(
+													ingredient
+												)}
+												onChange={() =>
+													handleIngredientSelect(
+														ingredient
+													)
+												}
+											/>
+											<span className="text-sm">
+												{toTitleCase(ingredient)}
+											</span>
+										</label>
+									)
+								)}
+							</div>
+						</div>
+					)
+				)}
 			</div>
 		</div>
 	);
