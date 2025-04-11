@@ -14,11 +14,11 @@ Kitchen Genie is a smart kitchen management system designed to simplify meal pla
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/kitchen_genie.git
+    git clone https://github.com/Manishshtestha/Recipe-Suggestion-App.git
     ```
 2. Navigate to the project directory:
     ```bash
-    cd kitchen_genie
+    cd Recipe-Suggestion-App
     ```
 3. Install dependencies:
     ```bash
@@ -32,7 +32,7 @@ Kitchen Genie is a smart kitchen management system designed to simplify meal pla
 ## Technologies Used
 
 - **Frontend**: React.js
-- **Backend**: Node.js, Express.js
+- **Backend**: Next.js
 - **Database**: MongoDB
 - **Other Tools**: Redux, Axios
 
@@ -63,5 +63,5 @@ This project is licensed under the [MIT License](LICENSE).
 
 For any questions or feedback, feel free to reach out:
 
-- **Email**: yourname@example.com
-- **GitHub**: [yourusername](https://github.com/yourusername)
+- **Email**: manishshtestha472@gmail.com
+- **GitHub**: [Manishshtestha](https://github.com/Manishshtestha)
