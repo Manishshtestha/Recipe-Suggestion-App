@@ -1,3 +1,9 @@
+export type IngredientGroup = {
+    group_name: string;
+    icon: string; 
+    ingredients: string[];
+}
+
 const ingredientGroupsData = [
 	{
 		group_name: "Pantry Essentials",
@@ -31,7 +37,7 @@ const ingredientGroupsData = [
 			"peanut butter",
 			"chili powder",
 			"cumin",
-			"mustard",
+			"mustard oil",
 			"chicken breast",
 			"cheddar",
 			"onion powder",
@@ -734,6 +740,16 @@ const ingredientGroupsData = [
 		group_name: "Meats",
 		icon: "meats.png",
 		ingredients: [
+            "ground buff",
+            "buffalo meat",
+            "buffalo steak",
+            "sekuwa",
+            "dried buffalo",
+            "dired chicken",
+            "dried goat",
+            "dried yak",
+            "yak tendon",
+            "yak meat",
 			"bacon",
 			"ground beef",
 			"beef steak",
@@ -3004,5 +3020,38 @@ const ingredientGroupsData = [
 		],
 	},
 ];
+
+ingredientGroupsData[0].ingredients.push("ghee");
+ingredientGroupsData[0].ingredients.push("turmeric");
+ingredientGroupsData[0].ingredients.push("coriander");
+ingredientGroupsData[0].ingredients.push("ginger");
+ingredientGroupsData[0].ingredients.push("chili");
+
+ingredientGroupsData[1].ingredients.push("mustard greens");
+ingredientGroupsData[1].ingredients.push("fenugreek leaves");
+
+ingredientGroupsData[14].ingredients.push("ginger powder");
+ingredientGroupsData[14].ingredients.push("garam masala");
+ingredientGroupsData[14].ingredients.push("turmeric powder");
+ingredientGroupsData[14].ingredients.push("cumin powder");
+ingredientGroupsData[14].ingredients.push("coriander powder");
+ingredientGroupsData[14].ingredients.push("chili powder");
+ingredientGroupsData[14].ingredients.push("fenugreek seeds");
+ingredientGroupsData[14].ingredients.push("asafoetida");
+ingredientGroupsData[14].ingredients.push("cinnamon");
+ingredientGroupsData[14].ingredients.push("cardamom");
+ingredientGroupsData[14].ingredients.push("cloves");
+
+
+ingredientGroupsData[20].ingredients.push("basmati rice");
+ingredientGroupsData[20].ingredients.push("beaten rice");
+ingredientGroupsData[20].ingredients.push("puffed rice");
+
+ingredientGroupsData[21].ingredients.push("lentils");
+ingredientGroupsData[21].ingredients.push("beans");
+ingredientGroupsData[21].ingredients.push("peas");
+
+ingredientGroupsData[26].ingredients.push("ghee");
+
 
 export default ingredientGroupsData;
