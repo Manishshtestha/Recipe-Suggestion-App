@@ -37,8 +37,8 @@ const IngredientsSelector = () => {
 	}, [ingredientGroups, searchTerm]);
 
 	return (
-		<div className="w-full border rounded-2xl p-4">
-			<div>
+		<div className="ingredients_selector w-full border rounded-2xl p-4">
+			<div className="">
 				<h2 className="text-2xl font-bold mb-4">Ingredients</h2>
 				<div className="">
 					<input
@@ -50,29 +50,31 @@ const IngredientsSelector = () => {
 					/>
 					{searchTerm && (
 						<button
-							className="rounded-full border px-4 py-2 z-20 absolute right-[97px] active:bg-red-600 active:text-black font-bold"
+							className="rounded-full border px-3 py-1 z-20 absolute right-[100px] mt-1 bg-black text-red-500 active:scale-95 font-bold"
 							onClick={() => setSearchTerm("")}>
 							X
 						</button>
 					)}
 				</div>
-				<div className="flex flex-wrap">
+				<div className="flex flex-wrap mb-2 mt-2">
 					{selectedIngredients.map((ingredient, index) => (
 						<span
 							key={index}
-							className="bg-white text-black px-2 py-1 rounded-full text-sm mr-2 mt-1"
+							className="bg-white text-black px-2 py-1 rounded-full text-sm mr-2 mt-1 transition-all hover:bg-red-500 hover:text-black cursor-pointer"
 							onClick={() => handleIngredientSelect(ingredient)}>
 							{toTitleCase(ingredient)}
 						</span>
 					))}
 					{selectedIngredients.length === 0 && (
-						<span className="text-gray-500 text-sm items-center mt-2">
+						<span className="text-gray-500 px-2 py-1 rounded-full text-sm mr-2 mt-1">
 							No ingredients selected
 						</span>
 					)}
 					{selectedIngredients.length > 0 && (
-						<button className="rounded-full border px-2 mt-1 active:bg-red-600 active:text-black " onClick={() => setSelectedIngredients([])}>
-							Clear Selection
+						<button
+							className="rounded-full border px-2 mt-1 bg-black text-red-500 active:scale-95 "
+							onClick={() => setSelectedIngredients([])}>
+							Clear Selection{/*  */}
 						</button>
 					)}
 				</div>
@@ -89,11 +91,11 @@ const IngredientsSelector = () => {
 									(ingredient: string, index: number) => (
 										<label
 											key={`${groupIndex}-${index}`}
-											className={`flex items-center justify-center px-2 py-1 border rounded-full cursor-pointer 
+											className={`flex items-center justify-center px-2 py-1 border rounded-full cursor-pointer select-none
                   ${
 						selectedIngredients.includes(ingredient)
-							? "bg-[#7cff67] text-black"
-							: "text-white hover:bg-green-200 hover:text-black focus:bg-green-300 active:bg-[#7cff67] disabled:bg-gray-300 transition-all"
+							? "bg-[#00d8ff] text-black"
+							: "text-white hover:bg-[#acdee6] hover:text-black focus:bg-green-300 active:bg-[#00d8ff] disabled:bg-gray-300 active:scale-95 transition-all "
 					}`}>
 											<input
 												type="checkbox"

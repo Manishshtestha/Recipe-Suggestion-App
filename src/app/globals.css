@@ -24,3 +24,21 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.ingredients_selector{
+  animation: transitionUp 0.5s ease-in-out;
+}
+
+.slidedown {
+  animation: transitionUp 0.5s ease-in-out;
+}
+@keyframes transitionUp {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
