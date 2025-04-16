@@ -1,7 +1,8 @@
 "use client";
 import { useState, useMemo } from "react";
-import { toTitleCase } from "../../utils";
+import { toTitleCase } from "../app/_lib/utils";
 import ingredientGroupsData from "../../data/ingredientGroups";
+import Searchbar from "./Searchbar";
 
 interface IngredientGroup {
 	group_name: string;
@@ -41,20 +42,11 @@ const IngredientsSelector = () => {
 			<div className="">
 				<h2 className="text-2xl font-bold mb-4">Ingredients</h2>
 				<div className="">
-					<input
-						type="text"
-						placeholder="Search ingredients..."
-						className="w-full p-2 pl-3 border rounded-full relative focus:outline-none"
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
+					<Searchbar
+						searchType="Ingredients"
+						searchValue={searchTerm}
+						setSearchValue={setSearchTerm}
 					/>
-					{searchTerm && (
-						<button
-							className="rounded-full border px-3 py-1 z-20 absolute right-[100px] mt-1 bg-black text-red-500 active:scale-95 font-bold"
-							onClick={() => setSearchTerm("")}>
-							X
-						</button>
-					)}
 				</div>
 				<div className="flex flex-wrap mb-2 mt-2">
 					{selectedIngredients.map((ingredient, index) => (
