@@ -39,7 +39,7 @@ const IngredientsSelector = () => {
 
 	return (
 		<div className="ingredients_selector w-full border rounded-2xl p-4">
-			<div className="">
+			<div className="flex flex-col">
 				<h2 className="text-2xl font-bold mb-4">Ingredients</h2>
 				<div className="">
 					<Searchbar
