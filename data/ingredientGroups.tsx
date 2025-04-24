@@ -18,7 +18,8 @@ const ingredientGroupsData = [
 			"flour",
 			"olive oil",
 			"garlic powder",
-			"white rice",
+			"rice",
+			"brown rice",
 			"cinnamon",
 			"ketchup",
 			"soy sauce",
@@ -856,6 +857,8 @@ const ingredientGroupsData = [
 		group_name: "Poultry",
 		icon: "game_and_fowl.png",
 		ingredients: [
+			"chicken",
+			"turkey",
 			"chicken breast",
 			"cooked chicken",
 			"chicken thighs",
@@ -3055,3 +3058,7 @@ ingredientGroupsData[26].ingredients.push("ghee");
 
 
 export default ingredientGroupsData;
+
+export const uniqueIngredients = Array.from(
+	new Set(ingredientGroupsData.flatMap(group => group.ingredients))
+);
