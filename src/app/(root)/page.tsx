@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
-import DietryFilter from "../components/DietryFilter";
-import IngredientsSelector from "../components/IngredientsSelector";
-import RecipeCard from "../components/RecipeCard";
-import Searchbar from "../components/Searchbar";
-import SuggestedRecipe from "../components/SuggestedRecipe";
+import DietryFilter from "../../components/DietryFilter";
+import IngredientsSelector from "../../components/IngredientsSelector";
+import RecipeCard from "../../components/RecipeCard";
+import Searchbar from "../../components/Searchbar";
+import SuggestedRecipe from "../../components/SuggestedRecipe";
 
 export default function Home() {
   const [searchValue, setSearchValue] = useState("");

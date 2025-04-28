@@ -64,7 +64,8 @@ const IngredientsSelector: React.FC<IngredientsSelectorProps> = ({
       <div>
         <input
           type="text"
-          className="w-full border rounded-full px-3 py-2 bg-[rgba(0,0,0,0.5)] text-white placeholder-gray-400 focus:outline-none"
+          className="w-full border border-gray-700
+           rounded px-3 py-2 bg-[rgba(0,0,0,0.5)] text-white placeholder-gray-400 focus:outline-none"
           placeholder="Type to search and add ingredients"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
