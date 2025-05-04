@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import "@ /app/globals.css";
-import Navbar from "@/components/Navbar";
+import "@/app/globals.css";
 import Particles from "@/components/Particles";
 
 const geistSans = Geist({
@@ -43,9 +42,6 @@ export default function RootLayout({
 						/>
 					</div>
 					<div className="col-start-1 col-end-2 row-start-1 row-end-2 z-10">
-						<div className="slidedown fixed top-0 left-0 w-full z-[10000]">
-							<Navbar />
-						</div>
 						<main className="z-10 mt-20 min-h-screen">
 							{children}
 						</main>

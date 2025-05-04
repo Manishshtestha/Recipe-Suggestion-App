@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const Navbar = () => {
 	return (
-		<nav className="flex justify-between items-center p-4 top-0 z-10 absolute bg-transparent w-full">
+		<nav className="flex justify-between items-center p-4 top-0 z-10 fixed bg-transparent w-full ml-72">
 			<Link href="/" className="font-extrabold text-3xl">Kitchen <span className="text-amber-500">Genie</span></Link>
 			<div className="flex gap-3">
 				<Link href="/about">About</Link>

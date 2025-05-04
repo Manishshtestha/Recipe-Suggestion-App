@@ -14,6 +14,7 @@ export default function Home() {
   const [selectedMealType, setSelectedMealType] = useState("");
   const [selectedCookingTime, setSelectedCookingTime] = useState("");
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  const [isFullMode, setIsFullMode] = useState(true);
 
   const recipes = [
     {
@@ -99,12 +100,18 @@ export default function Home() {
   );
 
   return (
-    <div className="flex flex-col w-[90%] mx-auto gap-3">
+    <div className="flex w-full min-h-screen">
       <IngredientsSelector
         selectedIngredients={selectedIngredients}
         setSelectedIngredients={setSelectedIngredients}
+        isFullMode={isFullMode}
+        setIsFullMode={setIsFullMode}
       />
-      <div className="w-full flex flex-col gap-3 border rounded-2xl p-4">
+      <div
+        className={`flex-1 flex flex-col gap-3 p-4 transition-all duration-300 ${
+          isFullMode ? "ml-72" : "ml-20"
+        }`}
+      >
         <h2 className="text-2xl font-bold mb-4">Recipes</h2>
         <Searchbar
           searchType="recipes"
