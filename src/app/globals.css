@@ -23,6 +23,9 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .particles-container {
@@ -38,6 +41,7 @@ body {
 .slidedown {
   animation: transitionUp 0.5s ease-in-out;
 }
+
 @keyframes transitionUp {
   0% {
     opacity: 0;
@@ -46,5 +50,37 @@ body {
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Responsive styles for mobile devices */
+@media (max-width: 640px) {
+  body {
+    font-size: 14px;
+  }
+
+  .ingredients_selector,
+  .slidedown {
+    padding: 0 1rem;
+  }
+
+  /* Adjust grid layouts if any */
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Make images responsive */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Adjust padding and margins for smaller screens */
+  .p-4 {
+    padding: 1rem !important;
+  }
+
+  .max-w-3xl {
+    max-width: 100% !important;
   }
 }

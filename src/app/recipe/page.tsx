@@ -36,7 +36,7 @@ export default function Recipe() {
 		// Search filter
 		const matchesSearch =
 			recipe.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-			recipe.ingredients.some((ingredient) =>
+			recipe.ingredients.some((ingredient: string) =>
 				ingredient.toLowerCase().includes(searchValue.toLowerCase())
 			);
 

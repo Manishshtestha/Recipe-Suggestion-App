@@ -7,7 +7,7 @@ interface RecipePageProps {
 
 export default async function UniqueRecipe({ params }: RecipePageProps) {
   await dbConnect();
-  const recipe = await RecipeModel.findOne({ _id: params.recipeId }).lean();
+  const recipe = await RecipeModel.findOne({ _id: await params.recipeId }).lean();
 
   if (!recipe) {
     return <div className="text-center text-red-500">Recipe not found</div>;
