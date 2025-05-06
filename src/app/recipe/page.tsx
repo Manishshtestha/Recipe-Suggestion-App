@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DietryFilter from "@/components/DietryFilter";
 import RecipeCard from "@/components/RecipeCard";
 import Searchbar from "@/components/Searchbar";
@@ -12,53 +12,24 @@ export default function Recipe() {
 	const [selectedCookingMethod, setSelectedCookingMethod] = useState("");
 	const [selectedMealType, setSelectedMealType] = useState("");
 	const [selectedCookingTime, setSelectedCookingTime] = useState("");
+	const [recipes, setRecipes] = useState<any[]>([]);
 
-	const recipes = [
-		{
-			id: 1,
-			name: "Spaghetti Bolognese",
-			image: "https://example.com/spaghetti.jpg",
-			ingredients: ["spaghetti", "ground beef", "tomato sauce"],
-			dietaryRestrictions: ["gluten-free"],
-			cuisine: "italian",
-			cookingMethod: "boiling",
-			mealType: "dinner",
-			cookingTime: "30-60-minutes",
-		},
-		{
-			id: 2,
-			name: "Chicken Curry",
-			image: "https://example.com/curry.jpg",
-			ingredients: ["chicken", "curry powder", "coconut milk"],
-			dietaryRestrictions: ["dairy-free"],
-			cuisine: "indian",
-			cookingMethod: "boiling",
-			mealType: "dinner",
-			cookingTime: "30-60-minutes",
-		},
-		{
-			id: 3,
-			name: "Chicken Curry",
-			image: "https://example.com/curry.jpg",
-			ingredients: ["chicken", "curry powder", "coconut milk"],
-			dietaryRestrictions: ["dairy-free"],
-			cuisine: "indian",
-			cookingMethod: "boiling",
-			mealType: "dinner",
-			cookingTime: "30-60-minutes",
-		},
-		{
-			id: 4,
-			name: "Chicken Curry",
-			image: "https://example.com/curry.jpg",
-			ingredients: ["chicken", "curry powder", "coconut milk"],
-			dietaryRestrictions: ["dairy-free"],
-			cuisine: "indian",
-			cookingMethod: "boiling",
-			mealType: "dinner",
-			cookingTime: "30-60-minutes",
-		},
-	];
+	useEffect(() => {
+		async function fetchRecipes() {
+			try {
+				const response = await fetch("/api/recipes");
+				if (response.ok) {
+					const data = await response.json();
+					setRecipes(data);
+				} else {
+					console.error("Failed to fetch recipes");
+				}
+			} catch (error) {
+				console.error("Error fetching recipes:", error);
+			}
+		}
+		fetchRecipes();
+	}, []);
 
 	// Filtering logic
 	const filteredRecipes = recipes.filter((recipe) => {

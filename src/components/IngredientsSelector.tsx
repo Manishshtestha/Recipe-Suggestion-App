@@ -11,11 +11,6 @@ interface IngredientsSelectorProps {
   setIsFullMode: Dispatch<SetStateAction<boolean>>;
 }
 
-const navLinks = [
-  { href: "/about", label: "About" },
-  { href: "/profile", label: "Profile" },
-  { href: "/profile", label: "Suggest Anything" },
-];
 
 const socialLinks = [
   {
@@ -130,14 +125,14 @@ const IngredientsSelector: React.FC<IngredientsSelectorProps> = ({
 
   return (
     <div
-      className={`ingredients_selector fixed top-0 left-0 h-full border-r border-gray-700 bg-gray-900 p-4 overflow-y-auto text-white z-50 transition-width duration-300 flex flex-col justify-between ${
+      className={`ingredients_selector fixed top-0 left-0 h-full border-r border-gray-700 bg-black bg-opacity-30 backdrop-blur-md p-4 overflow-y-auto text-white z-50 transition-width duration-300 flex flex-col justify-between ${
         isFullMode ? "w-72" : "w-20 items-center"
       }`}
     >
       {/* Navbar content inside sidebar */}
       <div>
         <div className="flex items-center justify-between mb-4 w-full">
-          <Link href="/" className={`font-extrabold ${isFullMode ? "text-3xl" : "text-xl"} ${isFullMode ? "" : "truncate"}`}>
+          <Link href="/" className={`font-extrabold ${isFullMode ? "text-xl" : "text-md"} ${isFullMode ? "" : "truncate"}`}>
             {isFullMode ? (
               <>
                 Kitchen <span className="text-amber-500">Genie</span>
@@ -177,26 +172,7 @@ const IngredientsSelector: React.FC<IngredientsSelectorProps> = ({
             )}
           </button>
         </div>
-        {/* Navbar links */}
-        <nav className={`mb-4 w-full ${isFullMode ? "flex gap-3" : "flex flex-col items-center gap-4"}`}>
-          {navLinks.map(({ href, label }) => (
-            <Link
-              key={href + label}
-              href={href}
-              className={`hover:text-amber-500 flex items-center ${
-                isFullMode ? "gap-2" : "justify-center"
-              }`}
-              title={label}
-            >
-              {!isFullMode && (
-                <div className="w-6 h-6 flex items-center justify-center bg-amber-500 text-black rounded-full font-bold">
-                  {label.charAt(0)}
-                </div>
-              )}
-              {isFullMode && <span>{label}</span>}
-            </Link>
-          ))}
-        </nav>
+
         {/* Ingredients selector content */}
         {isFullMode && (
           <>

@@ -1,5 +1,7 @@
+import Link from "next/link";
+
 interface Recipe {
-	id: number;
+	_id: string;
 	name: string;
 	image: string;
 	ingredients: string[];
@@ -20,9 +22,10 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ data }) => {
 	return (
 		<div className="grid grid-cols-4 gap-3 ">
 			{data.map((recipe) => (
-				<div
-					key={recipe.id}
-					className="border rounded-xl p-4 shadow-md">
+				<Link
+					key={recipe._id}
+					href={`/recipe/${recipe._id}`}
+					className="border rounded-xl p-4 shadow-md block hover:shadow-lg transition-shadow">
 					<img
 						src={recipe.image}
 						alt={recipe.name}
@@ -49,7 +52,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ data }) => {
 							)}
 						</ul>
 					</div>
-				</div>
+				</Link>
 			))}
 		</div>
 	);

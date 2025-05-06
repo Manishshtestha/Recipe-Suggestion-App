@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
 
 import "@/app/globals.css";
 import Particles from "@/components/Particles";
+import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,29 +27,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-		<html lang="en">
-			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased relative min-h-screen bg-black`}>
-				<div className="grid h-screen w-full">
-					<div className="col-start-1 col-end-2 row-start-1 row-end-2">
-						<Particles
-							particleColors={["#ffffff", "#ff0000", "#00ff00","ffff00"]}
-							particleCount={400}
-							particleSpread={10}
-							speed={0.1}
-							particleBaseSize={100}
-							moveParticlesOnHover={true}
-							alphaParticles={false}
-							disableRotation={false}
-						/>
-					</div>
-					<div className="col-start-1 col-end-2 row-start-1 row-end-2 z-10">
-						<main className="z-10 mt-20 min-h-screen">
-							{children}
-						</main>
-					</div>
-				</div>
-			</body>
-		</html>
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased relative min-h-screen bg-black`}
+      >
+        <div className="grid h-screen w-full">
+          <div className="col-start-1 col-end-2 row-start-1 row-end-2">
+            <Particles
+              particleColors={["#ffffff", "#ff0000", "#00ff00", "ffff00"]}
+              particleCount={400}
+              particleSpread={10}
+              speed={0.1}
+              particleBaseSize={100}
+              moveParticlesOnHover={true}
+              alphaParticles={false}
+              disableRotation={false}
+            />
+          </div>
+          <div className="col-start-1 col-end-2 row-start-1 row-end-2 z-10 flex flex-col min-h-screen">
+            <Navbar />
+            <main className="z-10 min-h-screen">{children}</main>
+          </div>
+        </div>
+      </body>
+    </html>
   );
 }

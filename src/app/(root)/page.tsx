@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DietryFilter from "../../components/DietryFilter";
 import IngredientsSelector from "../../components/IngredientsSelector";
 import RecipeCard from "../../components/RecipeCard";
@@ -15,49 +15,31 @@ export default function Home() {
   const [selectedCookingTime, setSelectedCookingTime] = useState("");
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [isFullMode, setIsFullMode] = useState(true);
+  const [recipes, setRecipes] = useState<any[]>([]);
 
-  const recipes = [
-    {
-      id: 1,
-      name: "Spaghetti Bolognese",
-      image: "https://example.com/spaghetti.jpg",
-      ingredients: ["spaghetti", "ground beef", "tomato sauce"],
-      dietaryRestrictions: ["gluten-free"],
-      cuisine: "italian",
-      cookingMethod: "boiling",
-      mealType: "dinner",
-      cookingTime: "30-60-minutes",
-    },
-    {
-      id: 2,
-      name: "Chicken Curry",
-      image: "https://example.com/curry.jpg",
-      ingredients: ["chicken", "curry powder", "coconut milk"],
-      dietaryRestrictions: ["dairy-free"],
-      cuisine: "indian",
-      cookingMethod: "boiling",
-      mealType: "dinner",
-      cookingTime: "30-60-minutes",
-    },
-    {
-      id: 3,
-      name: "Rice Pudding",
-      image: "https://example.com/rice-pudding.jpg",
-      ingredients: ["rice", "milk", "sugar", "cinnamon"],
-      dietaryRestrictions: ["vegetarian"],
-      cuisine: "dessert",
-      cookingMethod: "boiling",
-      mealType: "dessert",
-      cookingTime: "30-60-minutes",
-    },
-  ];
+  useEffect(() => {
+    async function fetchRecipes() {
+      try {
+        const response = await fetch("/api/recipes");
+        if (response.ok) {
+          const data = await response.json();
+          setRecipes(data);
+        } else {
+          console.error("Failed to fetch recipes");
+        }
+      } catch (error) {
+        console.error("Error fetching recipes:", error);
+      }
+    }
+    fetchRecipes();
+  }, []);
 
   // Filtering logic for main recipe list
   const filteredRecipes = recipes.filter((recipe) => {
     // Search filter
     const matchesSearch =
       recipe.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-      recipe.ingredients.some((ingredient) =>
+      recipe.ingredients.some((ingredient: string) =>
         ingredient.toLowerCase().includes(searchValue.toLowerCase())
       );
 
