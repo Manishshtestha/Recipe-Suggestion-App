@@ -19,7 +19,7 @@ const Searchbar = ({
 			/>
 			{searchValue && (
 				<button
-					className="rounded-full border px-3 py-1 z-20 absolute right-[100px] mt-1 bg-black text-red-500 active:scale-95 font-bold"
+					className="rounded-full border px-3 py-1 z-20 absolute right-[20px] mt-1 bg-black text-red-500 active:scale-95 font-bold"
 					onClick={() => setSearchValue("")}>
 					X
 				</button>

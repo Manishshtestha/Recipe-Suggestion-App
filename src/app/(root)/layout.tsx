@@ -31,7 +31,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative min-h-screen bg-black`}
       >
-        <div className="grid h-screen w-full">
+        <div className="grid h-screen w-full overflow-y-hidden">
           <div className="col-start-1 col-end-2 row-start-1 row-end-2">
             <Particles
               particleColors={["#ffffff", "#ff0000", "#00ff00", "ffff00"]}
@@ -46,7 +46,7 @@ export default function RootLayout({
           </div>
           <div className="col-start-1 col-end-2 row-start-1 row-end-2 z-10 flex flex-col min-h-screen">
             <Navbar />
-            <main className="z-10 min-h-screen">{children}</main>
+            <main className="mt-8">{children}</main>
           </div>
         </div>
       </body>

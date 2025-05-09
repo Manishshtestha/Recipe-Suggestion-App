@@ -1,3 +1,4 @@
+import { toSentenceCase } from "@/app/_lib/utils";
 import Link from "next/link";
 
 interface Recipe {
@@ -5,14 +6,17 @@ interface Recipe {
 	name: string;
 	image: string;
 	ingredients: string[];
+	nutrition: string[];
+	mealType: string[];
 	dietaryRestrictions: string[];
 }
 
 interface RecipeCardProps {
 	data: Recipe[];
+	col_count: number;
 }
 
-const RecipeCard: React.FC<RecipeCardProps> = ({ data }) => {
+const RecipeCard: React.FC<RecipeCardProps> = ({ data,col_count }) => {
 	if (!data || data.length === 0) {
 		return (
 			<div className="text-center text-gray-500">No recipes found</div>
@@ -20,37 +24,46 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ data }) => {
 	}
 
 	return (
-		<div className="grid grid-cols-4 gap-3 ">
+		<div className={`grid grid-cols-${col_count} gap-3 max-h-[80vh] overflow-y-scroll`}>
 			{data.map((recipe) => (
 				<Link
 					key={recipe._id}
 					href={`/recipe/${recipe._id}`}
-					className="border rounded-xl p-4 shadow-md block hover:shadow-lg transition-shadow">
+					className="flex gap-2 items-center border rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow" title={`Best for ${recipe.mealType}`}>
 					<img
 						src={recipe.image}
 						alt={recipe.name}
-						className="w-full h-48 object-cover rounded-md mb-4"
+						loading="lazy"
+						className="w-[25vh] h-[25vh] object-cover rounded-md mb-4"
 					/>
-					<h2 className="text-xl font-semibold mb-2">
-						{recipe.name}
-					</h2>
-					<div className="mb-2">
-						<strong>Ingredients:</strong>
-						<ul className="list-disc list-inside">
-							{recipe.ingredients.map((ingredient, index) => (
-								<li key={index}>{ingredient}</li>
-							))}
-						</ul>
-					</div>
 					<div>
-						<strong>Dietary Restrictions:</strong>
-						<ul className="list-disc list-inside">
-							{recipe.dietaryRestrictions.map(
-								(restriction, index) => (
-									<li key={index}>{restriction}</li>
-								)
-							)}
-						</ul>
+						<h2 className="text-xl font-semibold mb-2">
+							{recipe.name}
+						</h2>
+						{/* <div className="mb-2">
+							<strong>Ingredients:</strong>
+							<ul className="list-inside list-none flex gap-2 flex-wrap">
+								{recipe.ingredients.map((ingredient, index) => (
+									<li
+										key={index}
+										className="border rounded-full text-sm px-2">
+										{toSentenceCase(ingredient)}
+									</li>
+								))}
+							</ul>
+						</div> */}
+						<div className="mb-2">
+							{/* <h2 className="text-xl font-semibold mb-2">
+								Nutrition
+							</h2> */}
+							<ul className="list-none flex flex-col gap-0.5 list-inside">
+								{recipe.nutrition.map(
+									(nutrient: string, index: number) => (
+										<li key={index} className="p-1 text-sm ">{nutrient}</li>
+									)
+								)}
+							</ul>
+						</div>
 					</div>
 				</Link>
 			))}

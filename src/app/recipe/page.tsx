@@ -1,17 +1,17 @@
 "use client";
 import { useState, useEffect } from "react";
-import DietryFilter from "@/components/DietryFilter";
+// import DietryFilter from "@/components/DietryFilter";
 import RecipeCard from "@/components/RecipeCard";
 import Searchbar from "@/components/Searchbar";
 
 export default function Recipe() {
 	const [searchValue, setSearchValue] = useState("");
-	const [selectedDietaryPreference, setSelectedDietaryPreference] =
-		useState("");
-	const [selectedCuisine, setSelectedCuisine] = useState("");
-	const [selectedCookingMethod, setSelectedCookingMethod] = useState("");
-	const [selectedMealType, setSelectedMealType] = useState("");
-	const [selectedCookingTime, setSelectedCookingTime] = useState("");
+	// const [selectedDietaryPreference, setSelectedDietaryPreference] =
+	// 	useState("");
+	// const [selectedCuisine, setSelectedCuisine] = useState("");
+	// const [selectedCookingMethod, setSelectedCookingMethod] = useState("");
+	// const [selectedMealType, setSelectedMealType] = useState("");
+	// const [selectedCookingTime, setSelectedCookingTime] = useState("");
 	const [recipes, setRecipes] = useState<any[]>([]);
 
 	useEffect(() => {
@@ -40,35 +40,36 @@ export default function Recipe() {
 				ingredient.toLowerCase().includes(searchValue.toLowerCase())
 			);
 
-		// Dietary preference filter
-		const matchesDietary =
-			!selectedDietaryPreference ||
-			recipe.dietaryRestrictions.includes(selectedDietaryPreference);
+		// // Dietary preference filter
+		// const matchesDietary =
+		// 	!selectedDietaryPreference ||
+		// 	recipe.dietaryRestrictions.includes(selectedDietaryPreference);
 
-		// Cuisine filter
-		const matchesCuisine =
-			!selectedCuisine || recipe.cuisine === selectedCuisine;
+		// // Cuisine filter
+		// const matchesCuisine =
+		// 	!selectedCuisine || recipe.cuisine === selectedCuisine;
 
-		// Cooking method filter
-		const matchesCookingMethod =
-			!selectedCookingMethod ||
-			recipe.cookingMethod === selectedCookingMethod;
+		// // Cooking method filter
+		// const matchesCookingMethod =
+		// 	!selectedCookingMethod ||
+		// 	recipe.cookingMethod === selectedCookingMethod;
 
-		// Meal type filter
-		const matchesMealType =
-			!selectedMealType || recipe.mealType === selectedMealType;
+		// // Meal type filter
+		// const matchesMealType =
+		// 	!selectedMealType || recipe.mealType === selectedMealType;
 
-		// Cooking time filter
-		const matchesCookingTime =
-			!selectedCookingTime || recipe.cookingTime === selectedCookingTime;
+		// // Cooking time filter
+		// const matchesCookingTime =
+		// 	!selectedCookingTime || recipe.cookingTime === selectedCookingTime;
 
 		return (
-			matchesSearch &&
-			matchesDietary &&
-			matchesCuisine &&
-			matchesCookingMethod &&
-			matchesMealType &&
-			matchesCookingTime
+			matchesSearch 
+			// &&
+			// matchesDietary &&
+			// matchesCuisine &&
+			// matchesCookingMethod &&
+			// matchesMealType &&
+			// matchesCookingTime
 		);
 	});
 
@@ -80,19 +81,7 @@ export default function Recipe() {
 				searchValue={searchValue}
 				setSearchValue={setSearchValue}
 			/>
-			<DietryFilter
-				selectedDietaryPreference={selectedDietaryPreference}
-				setSelectedDietaryPreference={setSelectedDietaryPreference}
-				selectedCuisine={selectedCuisine}
-				setSelectedCuisine={setSelectedCuisine}
-				selectedCookingMethod={selectedCookingMethod}
-				setSelectedCookingMethod={setSelectedCookingMethod}
-				selectedMealType={selectedMealType}
-				setSelectedMealType={setSelectedMealType}
-				selectedCookingTime={selectedCookingTime}
-				setSelectedCookingTime={setSelectedCookingTime}
-			/>
-			<RecipeCard data={filteredRecipes} />
+			<RecipeCard data={filteredRecipes} col_count={3}/>
 		</div>
 	);
 }

@@ -54,7 +54,7 @@ body {
 }
 
 /* Responsive styles for mobile devices */
-@media (max-width: 640px) {
+/* @media (max-width: 640px) {
   body {
     font-size: 14px;
   }
@@ -64,18 +64,18 @@ body {
     padding: 0 1rem;
   }
 
-  /* Adjust grid layouts if any */
+
   .grid {
     grid-template-columns: 1fr !important;
   }
 
-  /* Make images responsive */
+
   img {
     max-width: 100%;
     height: auto;
   }
 
-  /* Adjust padding and margins for smaller screens */
+
   .p-4 {
     padding: 1rem !important;
   }
@@ -83,4 +83,4 @@ body {
   .max-w-3xl {
     max-width: 100% !important;
   }
-}
+} */

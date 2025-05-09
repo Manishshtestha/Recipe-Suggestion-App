@@ -56,6 +56,7 @@ const ingredientGroupsData = [
 		group_name: "Vegetables & Greens",
 		icon: "vegetables.png",
 		ingredients: [
+			"spring onions",
 			"garlic",
 			"onion",
 			"bell pepper",
@@ -1131,12 +1132,14 @@ const ingredientGroupsData = [
 			"shredded squid",
 			"sea moss",
 			"langoustine",
+			"salmon fillet",
 		],
 	},
 	{
 		group_name: "Herbs & Spices",
 		icon: "spices.png",
 		ingredients: [
+			"fresh herbs",
 			"cinnamon",
 			"parsley",
 			"cilantro",
@@ -1455,6 +1458,8 @@ const ingredientGroupsData = [
 		group_name: "Baking",
 		icon: "baking_flours.png",
 		ingredients: [
+			"all-purpose flour",
+			"cake mix",
 			"flour",
 			"vanilla",
 			"baking powder",

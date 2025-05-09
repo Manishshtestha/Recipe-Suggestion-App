@@ -125,22 +125,22 @@ const IngredientsSelector: React.FC<IngredientsSelectorProps> = ({
 
   return (
     <div
-      className={`ingredients_selector fixed top-0 left-0 h-full border-r border-gray-700 bg-black bg-opacity-30 backdrop-blur-md p-4 overflow-y-auto text-white z-50 transition-width duration-300 flex flex-col justify-between ${
+      className={`ingredients_selector mt-10 fixed top-0 left-0 h-full border-r p-4 overflow-y-auto text-white z-50 transition-width duration-300 flex flex-col justify-between ${
         isFullMode ? "w-72" : "w-20 items-center"
       }`}
     >
       {/* Navbar content inside sidebar */}
       <div>
         <div className="flex items-center justify-between mb-4 w-full">
-          <Link href="/" className={`font-extrabold ${isFullMode ? "text-xl" : "text-md"} ${isFullMode ? "" : "truncate"}`}>
+
             {isFullMode ? (
               <>
-                Kitchen <span className="text-amber-500">Genie</span>
+                Select Ingredients
               </>
             ) : (
-              <span className="text-amber-500">KG</span>
+              <span className="text-amber-500">Ings</span>
             )}
-          </Link>
+
           <button
             onClick={() => setIsFullMode(!isFullMode)}
             className="ml-2 p-1 rounded bg-gray-700 hover:bg-gray-600 focus:outline-none"
@@ -245,7 +245,7 @@ const IngredientsSelector: React.FC<IngredientsSelectorProps> = ({
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-amber-500"
+              className="text-white hover:text-amber-500"
               aria-label={label}
               title={label}
             >

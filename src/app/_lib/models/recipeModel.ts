@@ -10,7 +10,7 @@ export interface IRecipe extends Document {
 	mealType: string;
 	cookingTime: string;
 	cookingInstructions: string[];
-    nurition: string[];
+    nutrition: string[];
 }
 
 const RecipeSchema: Schema<IRecipe> = new Schema({
@@ -22,8 +22,8 @@ const RecipeSchema: Schema<IRecipe> = new Schema({
 	cookingMethod: { type: String, required: true },
 	mealType: { type: String, required: true },
 	cookingTime: { type: String, required: true },
-    cookingInstructions: { type: [String], required: true },//Include in Steps
-    nurition: { type: [String], required: true },//Include in Nutrition
+	cookingInstructions: { type: [String], required: true }, //Include in Steps
+	nutrition: { type: [String], required: true }, //Include in Nutrition
 });
 
 const RecipeModel: Model<IRecipe> =

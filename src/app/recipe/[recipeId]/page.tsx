@@ -1,5 +1,6 @@
 import dbConnect from "@/app/_lib/mongoose";
 import RecipeModel from "@/app/_lib/models/recipeModel";
+import { toSentenceCase } from "@/app/_lib/utils";
 
 interface RecipePageProps {
   params: { recipeId: string };
@@ -15,7 +16,7 @@ export default async function UniqueRecipe({ params }: RecipePageProps) {
 
   return (
     <div className="recipe-container p-6 max-w-4xl mx-auto">
-      <div className="recipe-header mb-6">
+      <div className="recipe-header mt-7">
         <h1 className="text-3xl font-bold mb-4">{recipe.name}</h1>
         <div className="recipe-image mb-4">
           <img
@@ -27,9 +28,9 @@ export default async function UniqueRecipe({ params }: RecipePageProps) {
       </div>
       <div className="mb-4">
         <h2 className="text-xl font-semibold mb-2">Ingredients</h2>
-        <ul className="list-disc list-inside">
+        <ul className="list-none list-inside flex flex-wrap gap-2">
           {recipe.ingredients.map((ingredient: string, index: number) => (
-            <li key={index}>{ingredient}</li>
+            <li key={index} className="border rounded-full px-2">{toSentenceCase(ingredient)}</li>
           ))}
         </ul>
       </div>
@@ -53,22 +54,22 @@ export default async function UniqueRecipe({ params }: RecipePageProps) {
       <div className="mb-4">
         <strong>Cooking Time:</strong> {recipe.cookingTime}
       </div>
-      {/* <div className="mb-4">
+      <div className="mb-4">
         <h2 className="text-xl font-semibold mb-2">Cooking Instructions</h2>
         <ol className="list-decimal list-inside">
           {recipe.cookingInstructions.map((step: string, index: number) => (
             <li key={index}>{step}</li>
           ))}
         </ol>
-      </div> */}
-      {/* <div className="mb-4">
+      </div>
+      <div className="mb-4">
         <h2 className="text-xl font-semibold mb-2">Nutrition</h2>
-        <ul className="list-disc list-inside">
-          {recipe.nurition.map((nutrient: string, index: number) => (
+        <ul className="list-none flex flex-wrap list-inside">
+          {recipe.nutrition.map((nutrient: string, index: number) => (
             <li key={index}>{nutrient}</li>
           ))}
         </ul>
-      </div> */}
+      </div>
     </div>
   );
 }
