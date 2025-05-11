@@ -81,7 +81,7 @@ export default function Recipe() {
 				searchValue={searchValue}
 				setSearchValue={setSearchValue}
 			/>
-			<RecipeCard data={filteredRecipes} col_count={3}/>
+			<RecipeCard data={filteredRecipes} col_count={2}/>
 		</div>
 	);
 }

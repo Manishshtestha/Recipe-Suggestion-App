@@ -14,7 +14,7 @@ export default function RecipeLayout(
 					</div>
 					<div className="col-start-1 col-end-2 row-start-1 row-end-2 z-10 flex flex-col min-h-screen">
 						<Navbar />
-						<main className="z-10 min-h-screen">{children}</main>
+						<main className="z-10 mt-4 min-h-screen">{children}</main>
 					</div>
 				</div>
 			</body>
