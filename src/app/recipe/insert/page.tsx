@@ -11,7 +11,7 @@ export default function RecipeInsertPage() {
   const [mealType, setMealType] = useState("");
   const [cookingTime, setCookingTime] = useState("");
   const [cookingInstructions, setCookingInstructions] = useState<string[]>([""]);
-  const [nurition, setNurition] = useState<string[]>([""]);
+  const [nutrition, setNutrition] = useState<string[]>([""]);
   const [message, setMessage] = useState("");
 
   const handleArrayChange = (
@@ -73,7 +73,7 @@ export default function RecipeInsertPage() {
       mealType,
       cookingTime,
       cookingInstructions: cookingInstructions.filter((i) => i.trim() !== ""),
-      nurition: nurition.filter((i) => i.trim() !== ""),
+      nutrition: nutrition.filter((i) => i.trim() !== ""),
     };
 
     try {
@@ -97,7 +97,7 @@ export default function RecipeInsertPage() {
         setMealType("");
         setCookingTime("");
         setCookingInstructions([""]);
-        setNurition([""]);
+        setNutrition([""]);
       } else {
         setMessage("Failed to insert recipe.");
       }
@@ -294,21 +294,21 @@ export default function RecipeInsertPage() {
 
         <fieldset>
           <legend>Nutrition:</legend>
-          {nurition.map((nutrient, index) => (
+          {nutrition.map((nutrient, index) => (
             <div key={index} className="flex gap-2 mb-2">
               <input
                 type="text"
                 value={nutrient}
                 onChange={(e) =>
-                  handleArrayChange(setNurition, index, e.target.value, nurition)
+                  handleArrayChange(setNutrition, index, e.target.value, nutrition)
                 }
                 required
                 className="flex-1 border p-2"
               />
               <button
                 type="button"
-                onClick={() => removeArrayField(setNurition, nurition, index)}
-                disabled={nurition.length === 1}
+                onClick={() => removeArrayField(setNutrition, nutrition, index)}
+                disabled={nutrition.length === 1}
                 className="bg-red-500 text-white px-2 rounded disabled:opacity-50"
               >
                 Remove
@@ -317,7 +317,7 @@ export default function RecipeInsertPage() {
           ))}
           <button
             type="button"
-            onClick={() => addArrayField(setNurition, nurition)}
+            onClick={() => addArrayField(setNutrition, nutrition)}
             className="bg-blue-500 text-white px-4 py-2 rounded"
           >
             Add Nutrition
