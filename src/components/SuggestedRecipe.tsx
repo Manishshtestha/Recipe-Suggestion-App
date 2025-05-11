@@ -7,60 +7,79 @@ interface Recipe {
 	image: string;
 	ingredients: string[];
 	nutrition: string[];
+	mealType: string[];
 	dietaryRestrictions: string[];
 }
 
 interface RecipeCardProps {
 	data: Recipe[];
+	col_count: number;
 }
 
 const RecipeCard: React.FC<RecipeCardProps> = ({ data }) => {
 	if (!data || data.length === 0) {
 		return (
-			<div className="text-center text-gray-500">No recipes found</div>
+			<div className="text-center text-yellow-400 text-xl p-10 border-2 border-dashed border-yellow-500 bg-neutral-900 rounded-none">
+				No recipes found. Glitch in the matrix?
+			</div>
 		);
 	}
 
 	return (
-		<div className="grid grid-cols-2 gap-3 max-h-[80vh] overflow-y-scroll">
+		<div
+			className={`grid grid-cols-2 gap-3 max-h-[80vh] overflow-y-auto p-1 scrollbar-thin scrollbar-thumb-pink-500 scrollbar-track-neutral-800`}>
 			{data.map((recipe) => (
 				<Link
 					key={recipe._id}
 					href={`/recipe/${recipe._id}`}
-					className="flex gap-2 items-center border rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow">
+					className="group flex flex-col items-center sm:flex-row gap-4 border-2 border-neutral-700 bg-[rgba(0,0,0,0.6)] p-4 hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(0,255,255,0.5),0_0_5px_rgba(0,255,255,0.8)_inset] transition-all duration-300 ease-in-out backdrop-blur-sm rounded-none"
+					title={`Accessing data for: ${recipe.name} // Protocol: ${recipe.mealType}`}>
 					<img
 						src={recipe.image}
-						alt={recipe.name}
+						alt={`Booting image for ${recipe.name}`}
 						loading="lazy"
-						className="w-[25vh] h-[25vh] object-cover rounded-md mb-4"
+						className="w-[200px] h-[200px] object-cover border-2 border-neutral-600 group-hover:border-pink-500 transition-all duration-300 ease-in-out"
 					/>
-					<div>
-						<h2 className="text-xl font-semibold mb-2">
+					<div className="flex-grow">
+						<h2 className="text-lg md:text-xl font-bold text-pink-400 group-hover:text-pink-300 mb-2 uppercase tracking-wider break-words">
 							{recipe.name}
 						</h2>
-						{/* <div className="mb-2">
-							<strong>Ingredients:</strong>
-							<ul className="list-inside list-none flex gap-2 flex-wrap">
-								{recipe.ingredients.map((ingredient, index) => (
-									<li
-										key={index}
-										className="border rounded-full text-sm px-2">
-										{toSentenceCase(ingredient)}
-									</li>
-								))}
-							</ul>
-						</div> */}
+						{/* Cyberpunk theme often minimizes extra text, but if ingredients were to be shown: */}
 						<div className="mb-2">
-							{/* <h2 className="text-xl font-semibold mb-2">
-								Nutrition
+							<strong className="text-cyan-300 text-sm">
+								Intel Log // Ingredients:
+							</strong>
+							<ul className="list-inside list-none flex gap-1 flex-wrap mt-1">
+								{recipe.ingredients.slice(0, 4).map(
+									(
+										ingredient,
+										index // Limiting for aesthetics
+									) => (
+										<li
+											key={index}
+											className="border border-neutral-600 rounded-full text-xs px-2 py-0.5 text-neutral-400 group-hover:text-green-400 group-hover:border-green-600 transition-all">
+											{toSentenceCase(ingredient)}
+										</li>
+									)
+								)}
+								{recipe.ingredients.length > 5 && (
+									<li className="text-xs text-neutral-500">
+										...more
+									</li>
+								)}
+							</ul>
+						</div>
+						<div className="mb-2">
+							{/* <h2 className="text-md font-semibold mb-1 text-cyan-300 uppercase">
+								System Diagnostics // Nutrition
 							</h2> */}
-							<ul className="list-none flex flex-col gap-0.5 list-inside">
+							<ul className="list-none flex flex-col gap-0 list-inside">
 								{recipe.nutrition.map(
 									(nutrient: string, index: number) => (
 										<li
 											key={index}
-											className="p-1 text-sm ">
-											{nutrient}
+											className="py-0 px-1 text-xs md:text-sm text-green-400 group-hover:text-green-300 font-mono break-words">
+											{`> ${nutrient}`}
 										</li>
 									)
 								)}

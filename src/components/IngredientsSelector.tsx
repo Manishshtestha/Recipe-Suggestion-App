@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
-import Link from "next/link";
+import Link from "next/link"; // Keep Link if you plan to add internal links here, otherwise it can be removed.
 import { toTitleCase } from "@/app/_lib/utils";
 import { uniqueIngredients } from "@/../data/ingredientGroups";
 
@@ -19,7 +19,7 @@ const socialLinks = [
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6"
+        className="h-5 w-5" // Slightly smaller icons
         fill="currentColor"
         viewBox="0 0 24 24"
       >
@@ -33,7 +33,7 @@ const socialLinks = [
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6"
+        className="h-5 w-5"
         fill="currentColor"
         viewBox="0 0 24 24"
       >
@@ -47,7 +47,7 @@ const socialLinks = [
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6"
+        className="h-5 w-5"
         fill="currentColor"
         viewBox="0 0 24 24"
       >
@@ -61,7 +61,7 @@ const socialLinks = [
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6"
+        className="h-5 w-5"
         fill="currentColor"
         viewBox="0 0 24 24"
       >
@@ -107,7 +107,6 @@ const IngredientsSelector: React.FC<IngredientsSelectorProps> = ({
     setSelectedIngredients(selectedIngredients.filter((i) => i !== ingredient));
   };
 
-  // Close suggestions dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -125,62 +124,39 @@ const IngredientsSelector: React.FC<IngredientsSelectorProps> = ({
 
   return (
     <div
-      className={`ingredients_selector mt-10 fixed top-0 left-0 h-full border-r p-4 overflow-y-auto text-white z-50 transition-width duration-300 flex flex-col justify-between ${
-        isFullMode ? "w-72" : "w-20 items-center"
+      className={`ingredients_selector mt-20 fixed top-0 left-0 h-[calc(100vh-5rem)] bg-black bg-opacity-80 backdrop-blur-sm border-r-2 border-neutral-700 p-4 overflow-y-auto text-neutral-300 z-40 transition-all duration-300 ease-in-out flex flex-col justify-between scrollbar-thin scrollbar-thumb-pink-500 scrollbar-track-neutral-800 rounded-none ${
+        isFullMode ? "w-72 shadow-[5px_0_15px_rgba(0,255,255,0.1)]" : "w-20 items-center shadow-none" // Adjusted mt, h, z-index and added shadow
       }`}
     >
-      {/* Navbar content inside sidebar */}
       <div>
-        <div className="flex items-center justify-between mb-4 w-full">
-
+        <div className={`flex items-center mb-4 w-full ${isFullMode ? "justify-between" : "justify-center"}`}>
             {isFullMode ? (
-              <>
-                Select Ingredients
-              </>
+              <span className="text-pink-400 uppercase tracking-wider font-semibold text-lg">Ingredients</span>
             ) : (
-              <span className="text-amber-500">Ings</span>
+              <span className="text-cyan-400 font-bold text-sm transform rotate-[-90deg] whitespace-nowrap origin-center mt-3">DATA</span>
             )}
 
           <button
             onClick={() => setIsFullMode(!isFullMode)}
-            className="ml-2 p-1 rounded bg-gray-700 hover:bg-gray-600 focus:outline-none"
+            className={`p-1.5 rounded-none bg-neutral-800 hover:bg-neutral-700 text-cyan-400 hover:text-pink-400 focus:outline-none focus:ring-1 focus:ring-pink-500 transition-all duration-200 ${isFullMode ? "ml-2" : ""}`}
             aria-label={isFullMode ? "Collapse sidebar" : "Expand sidebar"}
             title={isFullMode ? "Collapse sidebar" : "Expand sidebar"}
           >
             {isFullMode ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M18 12H6" />
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}> <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /> </svg>
             ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 12h12" />
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}> <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /> </svg>
             )}
           </button>
         </div>
 
-        {/* Ingredients selector content */}
         {isFullMode && (
           <>
-            <div>
+            <div className="relative">
               <input
                 type="text"
-                className="w-full border border-gray-700 rounded px-3 py-2 bg-[rgba(0,0,0,0.5)] text-white placeholder-gray-400 focus:outline-none"
-                placeholder="Type to search and add ingredients"
+                className="w-full border-2 border-neutral-700 rounded-none px-3 py-2 bg-neutral-900 text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors duration-200 font-mono"
+                placeholder="Search Database..."
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onFocus={() => {
@@ -190,17 +166,20 @@ const IngredientsSelector: React.FC<IngredientsSelectorProps> = ({
               {showSuggestions && (
                 <div
                   ref={suggestionsRef}
-                  className="absolute z-10 bg-gray-800 border border-gray-700 w-[97.5%] max-h-48 overflow-y-auto rounded mt-1 text-white"
+                  className="absolute z-50 bg-neutral-900 border-2 border-neutral-700 w-full max-h-60 overflow-y-auto rounded-none mt-1 text-neutral-300 scrollbar-thin scrollbar-thumb-pink-500 scrollbar-track-neutral-800 shadow-lg shadow-pink-500/10"
                 >
                   {filteredSuggestions.map((suggestion, index) => (
                     <div
                       key={index}
-                      className="px-3 py-2 cursor-pointer hover:bg-amber-600 w-[100%]"
+                      className="px-3 py-2 cursor-pointer hover:bg-pink-600 hover:text-neutral-100 transition-colors duration-150 font-mono"
                       onClick={() => addIngredient(suggestion)}
                     >
                       {toTitleCase(suggestion)}
                     </div>
                   ))}
+                  {filteredSuggestions.length === 0 && !inputValue && (
+                     <div className="px-3 py-2 text-neutral-500">Begin typing to scan...</div>
+                  )}
                 </div>
               )}
             </div>
@@ -208,44 +187,31 @@ const IngredientsSelector: React.FC<IngredientsSelectorProps> = ({
               {selectedIngredients.map((ingredient, index) => (
                 <div
                   key={index}
-                  className="bg-blue-600 text-white rounded-full px-3 py-1 flex items-center gap-2 cursor-pointer"
+                  className="bg-pink-500 text-neutral-900 rounded-full px-3 py-1 text-sm font-semibold flex items-center gap-1.5 cursor-pointer hover:bg-pink-400 transition-colors duration-150"
                   onClick={() => removeIngredient(ingredient)}
-                  title="Click to remove"
+                  title={`Remove ${toTitleCase(ingredient)}`}
                 >
                   <span>{toTitleCase(ingredient)}</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 hover:text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} > <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /> </svg>
                 </div>
               ))}
               {selectedIngredients.length === 0 && (
-                <span className="text-gray-400">No ingredients selected</span>
+                <span className="text-neutral-500 italic text-sm mt-1">No active datapoints.</span>
               )}
             </div>
           </>
         )}
       </div>
-      {/* Social media links at bottom */}
+      
       {isFullMode && (
-        <div className="flex justify-around mt-4 border-t border-gray-700 pt-4 w-full">
+        <div className="flex justify-around mt-6 border-t-2 border-neutral-700 pt-4 w-full">
           {socialLinks.map(({ href, label, icon }) => (
             <a
               key={label}
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white hover:text-amber-500"
+              className="text-neutral-400 hover:text-cyan-400 transition-colors duration-200"
               aria-label={label}
               title={label}
             >
