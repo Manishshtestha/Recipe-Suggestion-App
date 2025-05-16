@@ -1,19 +1,12 @@
 "use client";
-import { useState, useEffect } from "react";
-// import DietryFilter from "../../components/DietryFilter";
-import IngredientsSelector from "../../components/IngredientsSelector";
+import { useState, useEffect, useMemo } from "react";
+import IngredientsSelector from "@/src/../components/IngredientsSelector";
 import RecipeCard from "../../components/RecipeCard";
 import Searchbar from "../../components/Searchbar";
 import SuggestedRecipe from "../../components/SuggestedRecipe";
-import Link from "next/link";
 
 export default function Home() {
   const [searchValue, setSearchValue] = useState("");
-  // const [selectedDietaryPreference, setSelectedDietaryPreference] = useState("");
-  // const [selectedCuisine, setSelectedCuisine] = useState("");
-  // const [selectedCookingMethod, setSelectedCookingMethod] = useState("");
-  // const [selectedMealType, setSelectedMealType] = useState("");
-  // const [selectedCookingTime, setSelectedCookingTime] = useState("");
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [isFullMode, setIsFullMode] = useState(true);
   const [recipes, setRecipes] = useState<any[]>([]);
@@ -37,87 +30,62 @@ export default function Home() {
 
   // Filtering logic for main recipe list
   const filteredRecipes = recipes.filter((recipe) => {
-    // Search filter
     const matchesSearch =
       recipe.name.toLowerCase().includes(searchValue.toLowerCase()) ||
       recipe.ingredients.some((ingredient: string) =>
         ingredient.toLowerCase().includes(searchValue.toLowerCase())
       );
-
-    // // Dietary preference filter
-    // const matchesDietary =
-    //   !selectedDietaryPreference ||
-    //   recipe.dietaryRestrictions.includes(selectedDietaryPreference);
-
-    // // Cuisine filter
-    // const matchesCuisine =
-    //   !selectedCuisine || recipe.cuisine === selectedCuisine;
-
-    // // Cooking method filter
-    // const matchesCookingMethod =
-    //   !selectedCookingMethod || recipe.cookingMethod === selectedCookingMethod;
-
-    // // Meal type filter
-    // const matchesMealType =
-    //   !selectedMealType || recipe.mealType === selectedMealType;
-
-    // // Cooking time filter
-    // const matchesCookingTime =
-    //   !selectedCookingTime || recipe.cookingTime === selectedCookingTime;
-
-    return (
-      matchesSearch 
-      // matchesDietary &&
-      // matchesCuisine &&
-      // matchesCookingMethod &&
-      // matchesMealType &&
-      // matchesCookingTime
-    );
+    return matchesSearch;
   });
 
-  // Filtering logic for suggested recipes based on selected ingredients
-  const filteredSuggestedRecipes = recipes.filter((recipe) =>
-    selectedIngredients.every((ingredient) =>
-      recipe.ingredients.includes(ingredient)
-    )
+  // Filtering and sorting logic for suggested recipes based on selected ingredients
+  const selectedIngredientsLowerTrimmed = selectedIngredients.map((ingredient) =>
+    ingredient.trim().toLowerCase()
   );
 
+  const filteredSuggestedRecipes = useMemo(() => {
+    // Filter recipes that include at least one selected ingredient
+    const filtered = recipes.filter((recipe) =>
+      selectedIngredientsLowerTrimmed.some((selectedIngredient) =>
+        recipe.ingredients.some((recipeIngredient: string) =>
+          recipeIngredient.trim().toLowerCase().includes(selectedIngredient)
+        )
+      )
+    );
+
+    // Sort recipes by number of ingredients in descending order
+    return filtered.sort((a, b) => b.ingredients.length - a.ingredients.length);
+  }, [recipes, selectedIngredientsLowerTrimmed]);
+
   return (
-		<div className="flex w-full min-h-screen">
-			<IngredientsSelector
-				selectedIngredients={selectedIngredients}
-				setSelectedIngredients={setSelectedIngredients}
-				isFullMode={isFullMode}
-				setIsFullMode={setIsFullMode}
-			/>
-			<div
-				className={`flex-1 flex flex-col gap-3 p-4 transition-all duration-300 ${
-					isFullMode ? "ml-72" : "ml-20"
-				}`}>
-				<h2 className="text-2xl font-bold mb-4"></h2>
-				<Searchbar
-					searchType="recipes"
-					searchValue={searchValue}
-					setSearchValue={setSearchValue}
-				/>
-				{/* <DietryFilter
-          selectedDietaryPreference={selectedDietaryPreference}
-          setSelectedDietaryPreference={setSelectedDietaryPreference}
-          selectedCuisine={selectedCuisine}
-          setSelectedCuisine={setSelectedCuisine}
-          selectedCookingMethod={selectedCookingMethod}
-          setSelectedCookingMethod={setSelectedCookingMethod}
-          selectedMealType={selectedMealType}
-          setSelectedMealType={setSelectedMealType}
-          selectedCookingTime={selectedCookingTime}
-          setSelectedCookingTime={setSelectedCookingTime}
-        /> */}
-				{selectedIngredients.length > 0 ? (
-					<SuggestedRecipe data={filteredSuggestedRecipes} />
-				) : (
-					<RecipeCard data={filteredRecipes} col_count={2}/>
-				)}
-			</div>
-		</div>
+    <div className="flex w-full min-h-screen">
+      <IngredientsSelector
+        selectedIngredients={selectedIngredients}
+        setSelectedIngredients={setSelectedIngredients}
+        isFullMode={isFullMode}
+        setIsFullMode={setIsFullMode}
+      />
+      <div
+        className={`flex-1 flex flex-col gap-3 p-4 transition-all duration-300 ${
+          isFullMode ? "ml-72" : "ml-20"
+        }`}
+      >
+        <h2 className="text-2xl font-bold mb-4"></h2>
+        <Searchbar
+          searchType="recipes"
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+        />
+        {selectedIngredients.length > 0 ? (
+          <SuggestedRecipe data={filteredSuggestedRecipes} col_count={1} />
+        ) : (
+          <RecipeCard
+            data={filteredRecipes}
+            col_count={2}
+            selectedIngredients={selectedIngredients}
+          />
+        )}
+      </div>
+    </div>
   );
 }

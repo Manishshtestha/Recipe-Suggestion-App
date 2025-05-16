@@ -62,15 +62,13 @@ export default function Recipe() {
 		// const matchesCookingTime =
 		// 	!selectedCookingTime || recipe.cookingTime === selectedCookingTime;
 
-		return (
-			matchesSearch 
-			// &&
-			// matchesDietary &&
-			// matchesCuisine &&
-			// matchesCookingMethod &&
-			// matchesMealType &&
-			// matchesCookingTime
-		);
+		return matchesSearch;
+		// &&
+		// matchesDietary &&
+		// matchesCuisine &&
+		// matchesCookingMethod &&
+		// matchesMealType &&
+		// matchesCookingTime
 	});
 
 	return (
@@ -81,7 +79,7 @@ export default function Recipe() {
 				searchValue={searchValue}
 				setSearchValue={setSearchValue}
 			/>
-			<RecipeCard data={filteredRecipes} col_count={2}/>
+			<RecipeCard data={filteredRecipes} col_count={2} selectedIngredients={[]}/>
 		</div>
 	);
 }

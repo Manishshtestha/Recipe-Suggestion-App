@@ -11,6 +11,8 @@ const ingredientGroupsData = [
 		ingredients: [
 			"butter",
 			"egg",
+			"oil",
+			"salt",
 			"garlic",
 			"milk",
 			"onion",

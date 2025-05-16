@@ -1,7 +1,8 @@
 "use client";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/app/_context/AuthContext"; // Import useAuth
+import { signIn } from "next-auth/react";
+import { useAuth } from "@/app/_context/AuthContext";
 
 const LoginPage = () => {
 	const [formData, setFormData] = useState({
@@ -10,24 +11,20 @@ const LoginPage = () => {
 	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [apiError, setApiError] = useState<string | null>(null);
-	// const [successMessage, setSuccessMessage] = useState<string | null>(null); // Can remove if redirecting immediately
-
 	const router = useRouter();
-	const { login } = useAuth(); // Get the login function from context
+	const { login } = useAuth();
 	const containerRef = useRef<HTMLDivElement>(null);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({ ...prev, [name]: value }));
 		if (apiError) setApiError(null);
-		// if (successMessage) setSuccessMessage(null);
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsLoading(true);
 		setApiError(null);
-		// setSuccessMessage(null);
 
 		if (!formData.email || !formData.password) {
 			setApiError("Both email and password are required.");
@@ -36,35 +33,42 @@ const LoginPage = () => {
 		}
 
 		try {
-			const response = await fetch("/api/auth/login", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(formData),
+			const result = await signIn("credentials", {
+				email: formData.email,
+				password: formData.password,
+				redirect: false, // Handle redirect manually
 			});
 
-			const result = await response.json();
-
-			if (!response.ok) {
-				throw new Error(
-					result.message ||
-						"Login failed. Please check your credentials."
-				);
+			if (result?.error) {
+				throw new Error(result.error || "Invalid credentials");
 			}
 
-			// Login successful - call the context's login function
-			// Ensure result.user matches the AuthenticatedUser type
-			const { password, followers, following, ...userDataForContext } =
-				result.user; // Destructure to fit AuthenticatedUser
+			if (!result?.ok) {
+				throw new Error("An unexpected error occurred during login");
+			}
 
-			login(userDataForContext, result.token); // Pass token if your API sends one
+			// Fetch session to get user data
+			const response = await fetch("/api/auth/session");
+			if (!response.ok) {
+				throw new Error("Failed to fetch session");
+			}
+			const session = await response.json();
+			if (!session?.user) {
+				throw new Error("No user data in session");
+			}
 
-			// setSuccessMessage(result.message || 'Login successful! Redirecting...'); // Optional: show message
+			// Prepare user data for AuthContext
+			const userDataForContext = {
+				id: session.user.id,
+				name: session.user.name,
+				email: session.user.email,
+			};
+
+			// Call AuthContext login (no token in this example; add if needed)
+			login(userDataForContext, null); // Pass null for token or fetch it separately
+
 			setFormData({ email: "", password: "" });
-
-			// Redirect to homepage or dashboard
-			router.push("/"); // Redirect to homepage or desired page
+			router.push("/"); // Redirect to homepage
 		} catch (err: any) {
 			setApiError(
 				err.message || "An unexpected error occurred during login."
@@ -74,15 +78,7 @@ const LoginPage = () => {
 		}
 	};
 
-	// ... rest of your component (useEffect for tilt, return JSX)
-	// Remember to update the JSX to remove successMessage if you're not using it
-	// And ensure the button disabled state and error display work as intended.
-
 	return (
-		// ... your existing JSX structure ...
-		// Make sure to conditionally display {apiError}
-		// The button should be disabled={isLoading}
-		// The button text can be {isLoading ? 'Authenticating...' : 'Authenticate'}
 		<div className="min-h-screen flex items-center justify-center bg-neutral-950 font-mono text-neutral-300 p-4">
 			<div
 				ref={containerRef}
@@ -136,12 +132,6 @@ const LoginPage = () => {
 							<span className="font-bold">Error:</span> {apiError}
 						</p>
 					)}
-					{/* Success message can be removed if redirecting immediately */}
-					{/* {successMessage && (
-                        <p className="mt-4 text-center text-sm text-green-400 bg-green-900 bg-opacity-50 border border-green-500 p-2 rounded-none">
-                           {successMessage}
-                        </p>
-                    )} */}
 				</form>
 			</div>
 		</div>

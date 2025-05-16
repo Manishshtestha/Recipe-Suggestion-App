@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, Document, Model,Types } from "mongoose";
 
 export interface IRecipe extends Document {
 	name: string;
@@ -11,6 +11,7 @@ export interface IRecipe extends Document {
 	cookingTime: string;
 	cookingInstructions: string[];
     nutrition: string[];
+	likes: Types.ObjectId[];
 }
 
 const RecipeSchema: Schema<IRecipe> = new Schema({
@@ -24,6 +25,12 @@ const RecipeSchema: Schema<IRecipe> = new Schema({
 	cookingTime: { type: String, required: true },
 	cookingInstructions: { type: [String], required: true }, //Include in Steps
 	nutrition: { type: [String], required: true }, //Include in Nutrition
+	likes: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: "User",
+		},
+	],
 });
 
 const RecipeModel: Model<IRecipe> =

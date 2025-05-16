@@ -4,36 +4,43 @@ import { toSentenceCase } from "@/app/_lib/utils";
 import CommentsSection from "@/components/CommentSection";
 
 interface RecipePageProps {
-  params: { recipeId: string };
+	params: { recipeId: string };
 }
 
 // Helper function to render key-value pairs, can be expanded
-const DetailItem: React.FC<{ label: string; value: string | string[] | undefined }> = ({ label, value }) => {
-  if (!value || (Array.isArray(value) && value.length === 0)) return null;
-  const displayValue = Array.isArray(value) ? value.join(', ') : value;
-  return (
-    <div className="mb-3">
-      <strong className="text-pink-400 uppercase tracking-wide text-sm">{label}:</strong>
-      <span className="ml-2 text-neutral-400">{toSentenceCase(displayValue)}</span>
-    </div>
-  );
+const DetailItem: React.FC<{
+	label: string;
+	value: string | string[] | undefined;
+}> = ({ label, value }) => {
+	if (!value || (Array.isArray(value) && value.length === 0)) return null;
+	const displayValue = Array.isArray(value) ? value.join(", ") : value;
+	return (
+		<div className="mb-3">
+			<strong className="text-pink-400 uppercase tracking-wide text-sm">
+				{label}:
+			</strong>
+			<span className="ml-2 text-neutral-400">
+				{toSentenceCase(displayValue)}
+			</span>
+		</div>
+	);
 };
 
 export default async function UniqueRecipe({ params }: RecipePageProps) {
-  await dbConnect();
-  const recipe = await RecipeModel.findOne({ _id: params.recipeId }).lean();
+	await dbConnect();
+	const recipe = await RecipeModel.findOne({ _id: params.recipeId }).lean();
 
-  if (!recipe) {
-    return (
-      <div className="min-h-screen flex items-center justify-center font-mono text-center text-yellow-400 text-2xl p-10 border-2 border-dashed border-yellow-500 bg-neutral-900 rounded-none">
-        Recipe data CORRUPTED or not found in archive. Check uplink.
-      </div>
-    );
-  }
+	if (!recipe) {
+		return (
+			<div className="min-h-screen flex items-center justify-center font-mono text-center text-yellow-400 text-2xl p-10 border-2 border-dashed border-yellow-500 bg-neutral-900 rounded-none">
+				Recipe data CORRUPTED or not found in archive. Check uplink.
+			</div>
+		);
+	}
 
-  return (
+	return (
 		<main className="min-h-screen p-4 md:p-8 font-mono text-neutral-300 bg-neutral-950">
-			<div className="recipe-container bg-black bg-opacity-70 backdrop-blur-sm border-2 border-neutral-700 p-6 md:p-8 max-w-5xl mx-auto rounded-none shadow-lg shadow-cyan-500/20">
+			<div className="recipe-container bg-opacity-70 backdrop-blur-sm border-2 border-neutral-700 p-6 md:p-8 max-w-5xl mx-auto rounded-none shadow-lg shadow-cyan-500/20">
 				<div className="recipe-header mt-6 mb-8 text-center">
 					<h1 className="text-3xl md:text-4xl font-bold mb-6 text-cyan-400 uppercase tracking-wider break-words">
 						{recipe.name}
@@ -170,5 +177,5 @@ export default async function UniqueRecipe({ params }: RecipePageProps) {
 				<CommentsSection recipeId={params.recipeId}></CommentsSection>
 			</div>
 		</main>
-  );
+	);
 }

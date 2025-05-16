@@ -404,71 +404,73 @@ export default function RecipeInsertPage() {
 							)
 						}
 						className="border-2 border-pink-500 bg-transparent text-pink-400 px-4 py-2 mt-2 hover:border-cyan-400 hover:text-cyan-300 transition-all duration-300 ease-in-out uppercase text-sm font-bold focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-50">
-				+ Add Instruction Data
-			</button>
-		</fieldset>
+						+ Add Instruction Data
+					</button>
+				</fieldset>
 
-		<fieldset className="border-2 border-neutral-700 p-4 group hover:border-pink-500 transition-colors duration-300 ease-in-out">
-			<legend className="text-cyan-300 group-hover:text-pink-400 font-bold px-2 uppercase transition-colors duration-300 ease-in-out">
-				// Data Block: Nutrition Info
-			</legend>
-			<div className="grid grid-cols-2 gap-2">
-				<label className="text-cyan-300 uppercase text-sm">
-					Calories:
-					<input
-						type="text"
-						value={calories}
-						onChange={(e) => setCalories(e.target.value)}
-						className="w-full border-2 border-neutral-700 bg-neutral-900 text-cyan-400 p-2 mt-1 focus:border-pink-500 focus:shadow-[0_0_10px_rgba(236,72,153,0.5)] focus:outline-none transition-all duration-300 ease-in-out font-mono"
-					/>
-				</label>
-				<label className="text-cyan-300 uppercase text-sm">
-					Protein:
-					<input
-						type="text"
-						value={protein}
-						onChange={(e) => setProtein(e.target.value)}
-						className="w-full border-2 border-neutral-700 bg-neutral-900 text-cyan-400 p-2 mt-1 focus:border-pink-500 focus:shadow-[0_0_10px_rgba(236,72,153,0.5)] focus:outline-none transition-all duration-300 ease-in-out font-mono"
-					/>
-				</label>
-				<label className="text-cyan-300 uppercase text-sm">
-					Fat:
-					<input
-						type="text"
-						value={fat}
-						onChange={(e) => setFat(e.target.value)}
-						className="w-full border-2 border-neutral-700 bg-neutral-900 text-cyan-400 p-2 mt-1 focus:border-pink-500 focus:shadow-[0_0_10px_rgba(236,72,153,0.5)] focus:outline-none transition-all duration-300 ease-in-out font-mono"
-					/>
-				</label>
-				<label className="text-cyan-300 uppercase text-sm">
-					Carbohydrates:
-					<input
-						type="text"
-						value={carbohydrates}
-						onChange={(e) => setCarbohydrates(e.target.value)}
-						className="w-full border-2 border-neutral-700 bg-neutral-900 text-cyan-400 p-2 mt-1 focus:border-pink-500 focus:shadow-[0_0_10px_rgba(236,72,153,0.5)] focus:outline-none transition-all duration-300 ease-in-out font-mono"
-					/>
-				</label>
-				<label className="text-cyan-300 uppercase text-sm">
-					Cholesterol:
-					<input
-						type="text"
-						value={cholesterol}
-						onChange={(e) => setCholesterol(e.target.value)}
-						className="w-full border-2 border-neutral-700 bg-neutral-900 text-cyan-400 p-2 mt-1 focus:border-pink-500 focus:shadow-[0_0_10px_rgba(236,72,153,0.5)] focus:outline-none transition-all duration-300 ease-in-out font-mono"
-					/>
-				</label>
-				<label className="text-cyan-300 uppercase text-sm">
-					Sodium:
-					<input
-						type="text"
-						value={sodium}
-						onChange={(e) => setSodium(e.target.value)}
-						className="w-full border-2 border-neutral-700 bg-neutral-900 text-cyan-400 p-2 mt-1 focus:border-pink-500 focus:shadow-[0_0_10px_rgba(236,72,153,0.5)] focus:outline-none transition-all duration-300 ease-in-out font-mono"
-					/>
-				</label>
-			</div>
-		</fieldset>
+				<fieldset className="border-2 border-neutral-700 p-4 group hover:border-pink-500 transition-colors duration-300 ease-in-out">
+					<legend className="text-cyan-300 group-hover:text-pink-400 font-bold px-2 uppercase transition-colors duration-300 ease-in-out">
+						// Data Block: Nutrition Info
+					</legend>
+					<div className="grid grid-cols-2 gap-2">
+						<label className="text-cyan-300 uppercase text-sm">
+							Calories:
+							<input
+								type="text"
+								value={calories}
+								onChange={(e) => setCalories(e.target.value)}
+								className="w-full border-2 border-neutral-700 bg-neutral-900 text-cyan-400 p-2 mt-1 focus:border-pink-500 focus:shadow-[0_0_10px_rgba(236,72,153,0.5)] focus:outline-none transition-all duration-300 ease-in-out font-mono"
+							/>
+						</label>
+						<label className="text-cyan-300 uppercase text-sm">
+							Protein:
+							<input
+								type="text"
+								value={protein}
+								onChange={(e) => setProtein(e.target.value)}
+								className="w-full border-2 border-neutral-700 bg-neutral-900 text-cyan-400 p-2 mt-1 focus:border-pink-500 focus:shadow-[0_0_10px_rgba(236,72,153,0.5)] focus:outline-none transition-all duration-300 ease-in-out font-mono"
+							/>
+						</label>
+						<label className="text-cyan-300 uppercase text-sm">
+							Fat:
+							<input
+								type="text"
+								value={fat}
+								onChange={(e) => setFat(e.target.value)}
+								className="w-full border-2 border-neutral-700 bg-neutral-900 text-cyan-400 p-2 mt-1 focus:border-pink-500 focus:shadow-[0_0_10px_rgba(236,72,153,0.5)] focus:outline-none transition-all duration-300 ease-in-out font-mono"
+							/>
+						</label>
+						<label className="text-cyan-300 uppercase text-sm">
+							Carbohydrates:
+							<input
+								type="text"
+								value={carbohydrates}
+								onChange={(e) =>
+									setCarbohydrates(e.target.value)
+								}
+								className="w-full border-2 border-neutral-700 bg-neutral-900 text-cyan-400 p-2 mt-1 focus:border-pink-500 focus:shadow-[0_0_10px_rgba(236,72,153,0.5)] focus:outline-none transition-all duration-300 ease-in-out font-mono"
+							/>
+						</label>
+						<label className="text-cyan-300 uppercase text-sm">
+							Cholesterol:
+							<input
+								type="text"
+								value={cholesterol}
+								onChange={(e) => setCholesterol(e.target.value)}
+								className="w-full border-2 border-neutral-700 bg-neutral-900 text-cyan-400 p-2 mt-1 focus:border-pink-500 focus:shadow-[0_0_10px_rgba(236,72,153,0.5)] focus:outline-none transition-all duration-300 ease-in-out font-mono"
+							/>
+						</label>
+						<label className="text-cyan-300 uppercase text-sm">
+							Sodium:
+							<input
+								type="text"
+								value={sodium}
+								onChange={(e) => setSodium(e.target.value)}
+								className="w-full border-2 border-neutral-700 bg-neutral-900 text-cyan-400 p-2 mt-1 focus:border-pink-500 focus:shadow-[0_0_10px_rgba(236,72,153,0.5)] focus:outline-none transition-all duration-300 ease-in-out font-mono"
+							/>
+						</label>
+					</div>
+				</fieldset>
 
 				<button
 					type="submit"
