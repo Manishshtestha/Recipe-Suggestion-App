@@ -10,7 +10,7 @@ export default function AuthLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={`relative min-h-screen bg-black`}>
+			<body className={`relative min-h-screen`}>
 				<div className="grid h-screen w-full overflow-y-hidden">
 					<div className="col-start-1 col-end-2 row-start-1 row-end-2">
 						<Particles

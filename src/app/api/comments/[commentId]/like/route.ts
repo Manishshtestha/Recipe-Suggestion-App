@@ -28,14 +28,14 @@ export async function POST(request: NextRequest, { params }: { params: { comment
       comment.likes = comment.likes.filter((id: any) => id.toString() !== userId);
     } else {
       // Add like
-      comment.likes.push(userId);
+      comment.likes.push(Object(userId));
     }
 
     await comment.save();
 
     return NextResponse.json({ 
       message: userObjectId ? "Like removed" : "Like added",
-      likesCount: comment.likes.length,
+      totalLikes: comment.likes.length,
     });
   } catch (error) {
     console.error("Error in like/unlike comment:", error);

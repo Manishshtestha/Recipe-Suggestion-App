@@ -54,10 +54,12 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 				// Determine saturation based on missing ingredients
 				let saturationClass = "";
 				if (selectedIngredients.length > 0) {
-					if (missingIngredientsCount >= 4) {
-						saturationClass = "grayscale opacity-50";
-					} else if (missingIngredientsCount >= 2) {
-						saturationClass = "grayscale-50 opacity-75";
+					if (missingIngredientsCount >= 5) {
+						saturationClass = "grayscale opacity-40";
+					} else if (missingIngredientsCount >= 3) {
+						saturationClass = "grayscale-70 opacity-60";
+					} else if (missingIngredientsCount >= 1) {
+						saturationClass = "grayscale-30 opacity-80";
 					} else {
 						saturationClass = "grayscale-0 opacity-100";
 					}

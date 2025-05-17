@@ -79,7 +79,7 @@ const LoginPage = () => {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-neutral-950 font-mono text-neutral-300 p-4">
+		<div className="min-h-screen flex items-center justify-center font-mono text-neutral-300 p-4">
 			<div
 				ref={containerRef}
 				className="p-8 rounded-none w-full max-w-md bg-gradient-to-br from-neutral-900 via-black/90 to-neutral-900 shadow-[0_0_25px_3px_rgba(0,255,255,0.4),0_0_15px_1px_rgba(255,0,255,0.3)] backdrop-blur-sm border-2 border-cyan-500/50 transition-transform duration-300 ease-in-out">

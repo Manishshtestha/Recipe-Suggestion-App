@@ -1,29 +1,27 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/app/_lib/mongoose";
 import RecipeModel from "@/app/_lib/models/recipeModel";
-import { getServerSession } from "next-auth"; // Assuming NextAuth.js for authentication
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { Types } from "mongoose";
 
 export async function POST(
-	request: Request,
+	request: NextRequest,
 	{ params }: { params: { recipeId: string } }
 ) {
 	try {
 		await dbConnect();
-		const { recipeId } = params;
 
-		// Get the user session (requires authentication)
 		const session = await getServerSession(authOptions);
-		if (!session || !session.user?.id) {
+		if (!session || !session.user || !session.user.id) {
 			return NextResponse.json(
 				{ error: "Unauthorized" },
 				{ status: 401 }
 			);
 		}
-		const userId = session.user.id;
 
-		// Find the recipe
+		const userId = session.user.id;
+		const { recipeId } = await params;
+
 		const recipe = await RecipeModel.findById(recipeId);
 		if (!recipe) {
 			return NextResponse.json(
@@ -32,31 +30,30 @@ export async function POST(
 			);
 		}
 
-		// Check if user already liked the recipe
-		const hasLiked = recipe.likes.some(
-			(id: Types.ObjectId) => id.toString() === userId
+		const userObjectId = recipe.likes.find(
+			(id: any) => id.toString() === userId
 		);
 
-		if (hasLiked) {
-			// Unlike: Remove user ID from likes array
+		if (userObjectId) {
+			// User already liked, so remove like (unlike)
 			recipe.likes = recipe.likes.filter(
-				(id: Types.ObjectId) => id.toString() !== userId
+				(id: any) => id.toString() !== userId
 			);
 		} else {
-			// Like: Add user ID to likes array
-			recipe.likes.push(new Types.ObjectId(userId));
+			// Add like
+			recipe.likes.push(Object(userId));
 		}
 
 		await recipe.save();
 
 		return NextResponse.json({
-			liked: !hasLiked,
+			// liked: !hasLiked,
 			totalLikes: recipe.likes.length,
 		});
 	} catch (error) {
-		console.error("Error updating like:", error);
+		console.error("Error in like/unlike recipe:", error);
 		return NextResponse.json(
-			{ error: "Internal server error" },
+			{ error: "Internal Server Error" },
 			{ status: 500 }
 		);
 	}

@@ -12,7 +12,7 @@ export default function RecipeLayout(
 	return (
 		<html>
 			<body className="w-full bg-gray-100 text-gray-900 antialiased">
-				<div className="grid h-screen w-full">
+				<div className="grid h-screen w-full overflow-hidden">
 					<div className="col-start-1 col-end-2 row-start-1 row-end-2">
 						<Particles
 							particleColors={[

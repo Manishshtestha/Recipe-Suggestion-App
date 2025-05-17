@@ -24,6 +24,8 @@ const CommentDisplay: React.FC<CommentDisplayProps> = ({
 	onCommentDeleted,
 }) => {
 	const router = useRouter(); // Initialize useRouter
+	const [totalLikes,setTotalLikes] = useState();
+	const [liked, setLiked] = useState();
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedContent, setEditedContent] = useState(comment.content);
 	const [editLoading, setEditLoading] = useState(false);
@@ -42,7 +44,7 @@ const CommentDisplay: React.FC<CommentDisplayProps> = ({
 
 	const handleLike = async () => {
 		try {
-			const response = await fetch(`/api/comments/${comment._id}/like`, {
+			const response = await fetch(`/api/recipes/${recipeId}/like`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -58,11 +60,10 @@ const CommentDisplay: React.FC<CommentDisplayProps> = ({
 				throw new Error(result.error || "Failed to update like.");
 			}
 			const result = await response.json();
-			// Optionally update UI optimistically here, e.g., update likes count
-			// For now, just log the result
-			console.log(result.message, "Likes count:", result.likesCount);
+			setLiked(result.liked);
+			setTotalLikes(result.totalLikes);
 		} catch (error) {
-			console.error("Error liking comment:", error);
+			console.error("Error liking recipe:", error);
 		}
 	};
 
@@ -201,7 +202,9 @@ const CommentDisplay: React.FC<CommentDisplayProps> = ({
 					<div className="mt-1.5 flex items-center space-x-4 text-xs">
 						<button
 							onClick={handleLike}
-							className="text-neutral-400 hover:text-pink-400 transition-colors flex items-center gap-1"
+							className={` hover:text-pink-400 transition-colors flex items-center gap-1 ${
+								liked?"text-pink-400":"text-natural-400"
+							}`}
 							title="Like">
 							{/* Like Icon Placeholder */}
 							<svg
@@ -215,7 +218,7 @@ const CommentDisplay: React.FC<CommentDisplayProps> = ({
 									strokeWidth={2}
 									d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
 							</svg>
-							<span>{comment.likes?.length || 0}</span>
+							<span>{totalLikes}</span>
 						</button>
 						{isOwner && (
 							<button

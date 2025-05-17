@@ -15,7 +15,6 @@ export default function RecipeInsertPage() {
 	const [cookingInstructions, setCookingInstructions] = useState<string[]>([
 		"",
 	]);
-	const [nutrition, setNutrition] = useState<string[]>([""]);
 	const [calories, setCalories] = useState("");
 	const [protein, setProtein] = useState("");
 	const [fat, setFat] = useState("");
@@ -72,7 +71,14 @@ export default function RecipeInsertPage() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-
+		const nutrition = [
+			calories,
+			protein,
+			fat,
+			carbohydrates,
+			cholesterol,
+			sodium,
+		];
 		const recipeData = {
 			name,
 			image,
@@ -87,12 +93,7 @@ export default function RecipeInsertPage() {
 			cookingInstructions: cookingInstructions.filter(
 				(i) => i.trim() !== ""
 			),
-			calories,
-			protein,
-			fat,
-			carbohydrates,
-			cholesterol,
-			sodium,
+			nutrition
 		};
 
 		try {

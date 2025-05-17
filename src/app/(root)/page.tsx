@@ -142,7 +142,7 @@ export default function Home() {
 						onChange={(e) =>
 							setSortOption(e.target.value as typeof sortOption)
 						}
-						className="p-2 border rounded-md bg-white text-gray-0 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+						className="p-2 border text-gray-0 text-pink-500 hover:text-pink-300 hover:bg-black transition-all focus:outline-none">
 						<option value="most-matched">Most Matched</option>
 						<option value="alphabetical">Alphabetical</option>
 						<option value="ingredient-count">

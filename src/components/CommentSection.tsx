@@ -62,9 +62,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ recipeId }) => {
 
 	// Render Logic
 	return (
-		<div className="mt-10 border-t-2 border-neutral-700 pt-6 font-mono">
+		<div className="mt-[60px] border-t-2 pt-6 font-mono p-3">
 			<h2 className="text-2xl font-semibold mb-4 text-pink-400 uppercase tracking-wider">
-				// Discussion_Feed
+				// Comments
 			</h2>
 
 			{isLoadingAuth ? (
@@ -75,7 +75,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ recipeId }) => {
 					onCommentAdded={handleCommentAdded}
 				/>
 			) : (
-				<p className="text-neutral-400 bg-neutral-800 border border-neutral-700 p-3 rounded-none text-sm">
+				<p className="text-neutral-400	 border border-neutral-700 p-3 rounded-none text-sm">
 					Please{" "}
 					<a href="/login" className="text-cyan-400 hover:underline">
 						login
