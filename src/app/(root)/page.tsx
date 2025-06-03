@@ -6,10 +6,19 @@ import Searchbar from "../../components/Searchbar";
 import SuggestedRecipe from "../../components/SuggestedRecipe";
 
 export default function Home() {
-	const [searchValue, setSearchValue] = useState("");
-	const [selectedIngredients, setSelectedIngredients] = useState<string[]>(
-		[]
-	);
+	const [searchValue, setSearchValue] = useState(() => {
+		if (typeof window !== 'undefined') {
+			return localStorage.getItem('searchValue') || '';
+		}
+		return '';
+	});
+	const [selectedIngredients, setSelectedIngredients] = useState<string[]>(() => {
+		if (typeof window !== 'undefined') {
+			const stored = localStorage.getItem('selectedIngredients');
+			return stored ? JSON.parse(stored) : [];
+		}
+		return [];
+	});
 	const [isFullMode, setIsFullMode] = useState(true);
 	const [recipes, setRecipes] = useState<any[]>([]);
 	const [sortOption, setSortOption] = useState<
@@ -32,6 +41,14 @@ export default function Home() {
 		}
 		fetchRecipes();
 	}, []);
+
+	useEffect(() => {
+		localStorage.setItem('searchValue', searchValue);
+	}, [searchValue]);
+
+	useEffect(() => {
+		localStorage.setItem('selectedIngredients', JSON.stringify(selectedIngredients));
+	}, [selectedIngredients]);
 
 	// Move selectedIngredientsLowerTrimmed before filteredRecipes
 	const selectedIngredientsLowerTrimmed = selectedIngredients.map(
@@ -119,7 +136,7 @@ export default function Home() {
 	}, [recipes, selectedIngredientsLowerTrimmed, sortOption]);
 
 	return (
-		<div className="flex w-full min-h-screen">
+		<div className="flex w-full">
 			<IngredientsSelector
 				selectedIngredients={selectedIngredients}
 				setSelectedIngredients={setSelectedIngredients}
@@ -154,11 +171,11 @@ export default function Home() {
 					<SuggestedRecipe
 						data={filteredSuggestedRecipes}
 						col_count={2}
+						selectedIngredients={selectedIngredients}
 					/>
 				) : (
 					<RecipeCard
 						data={filteredRecipes}
-						col_count={2}
 						selectedIngredients={selectedIngredients}
 					/>
 				)}

@@ -182,7 +182,7 @@ export default async function UniqueRecipe({ params }: RecipePageProps) {
 				</div>
 			</main>
 			<div>
-				<InteractiveSection initialLiked={false} recipeId={params.recipeId} totalLikes={2}/>
+				<InteractiveSection initialLiked={false} recipeId={params.recipeId}/>
 			</div>
 		</div>
 	);

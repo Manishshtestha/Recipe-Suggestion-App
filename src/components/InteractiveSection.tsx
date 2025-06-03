@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState} from "react";
 import CommentsSection from "@/components/CommentSection";
 import { FaHeart } from "react-icons/fa";
 import { LiaCommentSolid } from "react-icons/lia";
@@ -8,7 +8,6 @@ import { FaShare } from "react-icons/fa";
 interface InteractiveSectionProps {
 	recipeId: string;
 	initialLiked: boolean;
-	totalLikes: number;
 }
 
 export default function InteractiveSection({
@@ -16,7 +15,6 @@ export default function InteractiveSection({
 }: InteractiveSectionProps) {
 	const [showComments, setShowComments] = useState(false);
 	const [liked, setLiked] = useState();
-	const [totalLikes, setTotalLikes] = useState();
 	const [shareMsg, setShareMsg] = useState("");
 
 	const handleLike = async () => {
@@ -38,7 +36,6 @@ export default function InteractiveSection({
 			}
 			const result = await response.json();
 			setLiked(result.liked);
-			setTotalLikes(result.totalLikes);
 		} catch (error) {
 			console.error("Error liking recipe:", error);
 		}

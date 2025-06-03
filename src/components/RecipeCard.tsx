@@ -13,13 +13,11 @@ interface Recipe {
 
 interface RecipeCardProps {
 	data: Recipe[];
-	col_count: number;
 	selectedIngredients: string[];
 }
 
 const RecipeCard: React.FC<RecipeCardProps> = ({
 	data,
-	col_count,
 	selectedIngredients,
 }) => {
 	if (!data || data.length === 0) {
@@ -37,7 +35,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 
 	return (
 		<div
-			className={`grid grid-cols-${col_count} gap-3 max-h-[80vh] overflow-y-auto p-1 scrollbar-thin scrollbar-thumb-pink-500 scrollbar-track-neutral-800`}>
+			className={`grid grid-cols-2 gap-3 max-h-[80vh] overflow-y-auto p-1 scrollbar-thin scrollbar-thumb-pink-500 scrollbar-track-neutral-800`}>
 			{data.map((recipe) => {
 				// Calculate missing ingredients with safeguard
 				const missingIngredientsCount = Array.isArray(
@@ -51,25 +49,11 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 					  ).length
 					: 0;
 
-				// Determine saturation based on missing ingredients
-				let saturationClass = "";
-				if (selectedIngredients.length > 0) {
-					if (missingIngredientsCount >= 5) {
-						saturationClass = "grayscale opacity-40";
-					} else if (missingIngredientsCount >= 3) {
-						saturationClass = "grayscale-70 opacity-60";
-					} else if (missingIngredientsCount >= 1) {
-						saturationClass = "grayscale-30 opacity-80";
-					} else {
-						saturationClass = "grayscale-0 opacity-100";
-					}
-				}
-
 				return (
 					<Link
 						key={recipe._id}
 						href={`/recipe/${recipe._id}`}
-						className={`group flex flex-col items-center sm:flex-row gap-4 border-2 border-neutral-700 bg-[rgba(0,0,0,0.6)] p-4 hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(0,255,255,0.5),0_0_5px_rgba(0,255,255,0.8)_inset] transition-all duration-300 ease-in-out backdrop-blur-sm rounded-none ${saturationClass}`}
+						className={`group flex flex-col items-center sm:flex-row gap-4 border-2 border-neutral-700 bg-[rgba(0,0,0,0.6)] p-4 hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(0,255,255,0.5),0_0_5px_rgba(0,255,255,0.8)_inset] transition-all duration-300 ease-in-out backdrop-blur-sm rounded-none`}
 						title={`Accessing data for: ${recipe.name} // Protocol: ${recipe.mealType}`}>
 						<img
 							src={recipe.image}

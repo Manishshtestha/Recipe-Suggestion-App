@@ -6,15 +6,8 @@ import { z } from "zod"; // Import Zod
 // Define Zod schema for registration
 const RegistrationSchema = z.object({
 	name: z.string().min(1, { message: "Operator Tag (Name) is required." }),
-	email: z
-		.string()
-		.email({ message: "Invalid email address for Secure Uplink." }),
-	password: z
-		.string()
-		.min(8, {
-			message:
-				"Access Key (Password) must be at least 8 characters long.",
-		}),
+	email: z.string().email({ message: "Invalid email address for Secure Uplink." }),
+	password: z.string().min(8, {message:"Access Key (Password) must be at least 8 characters long",}).regex(/^[a-zA-Z0-9]+$/, {message:"Access Key (Password) must be alphanumeric"}),
 });
 
 const RegisterPage = () => {

@@ -1,5 +1,25 @@
 "use client";
 import { useState, useEffect } from "react";
+import { z } from "zod";
+
+const RecipeSchema = z.object({
+	name: z.string().min(1, { message: "Name is required" }),
+	image: z.string().url({ message: "Invalid image URL" }),
+	ingredients: z.array(
+		z.string().min(1, { message: "Ingredient is required" })
+	),
+	dietaryRestrictions: z.array(
+		z.string().min(1, { message: "Dietary restriction is required" })
+	),
+	cuisine: z.string().min(1, { message: "Cuisine is required" }),
+	cookingMethod: z.string().min(1, { message: "Cooking method is required" }),
+	mealType: z.string().min(1, { message: "Meal type is required" }),
+	cookingTime: z.string().min(1, { message: "Cooking time is required" }),
+	cookingInstructions: z.array(
+		z.string().min(1, { message: "Cooking instruction is required" })
+	),
+	nutrition: z.array(z.string().min(1, { message: "Nutrition is required" })),
+});
 
 export default function RecipeInsertPage() {
 	const [name, setName] = useState("");
@@ -22,6 +42,10 @@ export default function RecipeInsertPage() {
 	const [cholesterol, setCholesterol] = useState("");
 	const [sodium, setSodium] = useState("");
 	const [message, setMessage] = useState("");
+
+	const [validationError, setValidationError] = useState<string | null>(null);
+	const [apiError, setApiError] = useState<string | null>(null);
+	const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
 	const handleArrayChange = (
 		setter: React.Dispatch<React.SetStateAction<string[]>>,
@@ -93,8 +117,18 @@ export default function RecipeInsertPage() {
 			cookingInstructions: cookingInstructions.filter(
 				(i) => i.trim() !== ""
 			),
-			nutrition
+			nutrition,
 		};
+		
+		const validationResult = RecipeSchema.safeParse(recipeData);
+		if (!validationResult.success) {
+			// Get the first error message for simplicity
+			const firstError = validationResult.error.errors[0]?.message;
+			setValidationError(
+				firstError || "Invalid input. Please check the fields."
+			);
+			return;
+		}
 
 		try {
 			const response = await fetch("/api/recipes", {
@@ -106,7 +140,7 @@ export default function RecipeInsertPage() {
 			});
 
 			if (response.ok) {
-				setMessage("Recipe inserted successfully!");
+				setSuccessMessage("Recipe inserted successfully!");
 				// Reset form
 				setName("");
 				setImage("");
@@ -124,10 +158,10 @@ export default function RecipeInsertPage() {
 				setCholesterol("");
 				setSodium("");
 			} else {
-				setMessage("Failed to insert recipe.");
+				setApiError("Failed to insert recipe.");
 			}
 		} catch (error) {
-			setMessage("Error inserting recipe.");
+			setApiError("Error inserting recipe.");
 		}
 	};
 
@@ -144,7 +178,6 @@ export default function RecipeInsertPage() {
 						type="text"
 						value={name}
 						onChange={(e) => setName(e.target.value)}
-						required
 						className="w-full border-2 border-neutral-700 bg-neutral-900 text-cyan-400 p-2 mt-1 focus:border-pink-500 focus:shadow-[0_0_10px_rgba(236,72,153,0.5)] focus:outline-none transition-all duration-300 ease-in-out font-mono"
 					/>
 				</label>
@@ -155,7 +188,6 @@ export default function RecipeInsertPage() {
 						type="url"
 						value={image}
 						onChange={(e) => setImage(e.target.value)}
-						required
 						className="w-full border-2 border-neutral-700 bg-neutral-900 text-cyan-400 p-2 mt-1 focus:border-pink-500 focus:shadow-[0_0_10px_rgba(236,72,153,0.5)] focus:outline-none transition-all duration-300 ease-in-out font-mono"
 					/>
 				</label>
@@ -188,7 +220,6 @@ export default function RecipeInsertPage() {
 										ingredients
 									)
 								}
-								required
 								className="flex-1 border-2 border-neutral-700 bg-neutral-900 text-neutral-300 p-2 focus:border-cyan-400 focus:outline-none transition-colors duration-300 ease-in-out font-mono"
 							/>
 							<button
@@ -240,7 +271,6 @@ export default function RecipeInsertPage() {
 										dietaryRestrictions
 									)
 								}
-								required
 								className="flex-1 border-2 border-neutral-700 bg-neutral-900 text-neutral-300 p-2 focus:border-cyan-400 focus:outline-none transition-colors duration-300 ease-in-out font-mono"
 							/>
 							<button
@@ -353,7 +383,6 @@ export default function RecipeInsertPage() {
 						type="text"
 						value={cookingTime}
 						onChange={(e) => setCookingTime(e.target.value)}
-						required
 						className="w-full border-2 border-neutral-700 bg-neutral-900 text-cyan-400 p-2 mt-1 focus:border-pink-500 focus:shadow-[0_0_10px_rgba(236,72,153,0.5)] focus:outline-none transition-all duration-300 ease-in-out font-mono"
 					/>
 				</label>
@@ -376,8 +405,7 @@ export default function RecipeInsertPage() {
 										e.target.value,
 										cookingInstructions
 									)
-								}
-								required
+								}					
 								className="flex-1 border-2 border-neutral-700 bg-neutral-900 text-neutral-300 p-2 focus:border-cyan-400 focus:outline-none transition-colors duration-300 ease-in-out font-mono"
 							/>
 							<button
@@ -478,6 +506,17 @@ export default function RecipeInsertPage() {
 					className="border-2 border-pink-500 bg-transparent text-pink-400 px-4 py-2 mt-2 hover:border-cyan-400 hover:text-cyan-300 transition-all duration-300 ease-in-out uppercase text-sm font-bold focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-50">
 					Insert Recipe Data
 				</button>
+				{(validationError || apiError) && (
+					<p className="mt-4 text-center text-sm text-red-400 bg-red-900 bg-opacity-50 border border-red-500 p-2 rounded-none">
+						<span className="font-bold">Error:</span>{" "}
+						{validationError || apiError}
+					</p>
+				)}
+				{successMessage && (
+					<p className="mt-4 text-center text-sm text-green-400 bg-green-900 bg-opacity-50 border border-green-500 p-2 rounded-none">
+						{successMessage}
+					</p>
+				)}
 			</form>
 		</div>
 	);

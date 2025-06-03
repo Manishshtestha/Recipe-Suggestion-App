@@ -2805,6 +2805,7 @@ const ingredientGroupsData = [
 			"chocolate bitters",
 			"vanilla liqueur",
 			"pisco",
+			"mung bean starch",
 			"plum wine",
 			"grapefruit bitters",
 			"moonshine",
