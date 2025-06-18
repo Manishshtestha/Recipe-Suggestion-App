@@ -18,7 +18,10 @@ const RecipeSchema = z.object({
 	cookingInstructions: z.array(
 		z.string().min(1, { message: "Cooking instruction is required" })
 	),
-	nutrition: z.array(z.string().min(1, { message: "Nutrition is required" })),
+	nutrition: z.array(z.object({
+		name: z.string().min(1, { message: "Nutrition name is required" }),
+		value: z.string().min(1, { message: "Nutrition value is required" })
+	})),
 });
 
 export default function RecipeInsertPage() {
@@ -96,13 +99,27 @@ export default function RecipeInsertPage() {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		const nutrition = [
-			calories,
-			protein,
-			fat,
-			carbohydrates,
-			cholesterol,
-			sodium,
-		];
+			{ name: "Calories", value: calories },
+			{ name: "Protein", value: protein },
+			{ name: "Fat", value: fat },
+			{ name: "Carbohydrates", value: carbohydrates },
+			{ name: "Cholesterol", value: cholesterol },
+			{ name: "Sodium", value: sodium },
+		].filter(nutrition => nutrition.value.trim() !== "");
+		
+		// Debug: Check nutrition array
+		console.log("Nutrition array before filtering:", [
+			{ name: "Calories", value: calories },
+			{ name: "Protein", value: protein },
+			{ name: "Fat", value: fat },
+			{ name: "Carbohydrates", value: carbohydrates },
+			{ name: "Cholesterol", value: cholesterol },
+			{ name: "Sodium", value: sodium },
+		]);
+		console.log("Nutrition array after filtering:", nutrition);
+		console.log("Nutrition array type:", typeof nutrition);
+		console.log("Nutrition is array:", Array.isArray(nutrition));
+		
 		const recipeData = {
 			name,
 			image,
@@ -120,6 +137,11 @@ export default function RecipeInsertPage() {
 			nutrition,
 		};
 		
+		// Debug logging
+		console.log("Recipe data being sent:", JSON.stringify(recipeData, null, 2));
+		console.log("Nutrition in recipeData:", recipeData.nutrition);
+		console.log("Nutrition type in recipeData:", typeof recipeData.nutrition);
+		
 		const validationResult = RecipeSchema.safeParse(recipeData);
 		if (!validationResult.success) {
 			// Get the first error message for simplicity
@@ -131,12 +153,16 @@ export default function RecipeInsertPage() {
 		}
 
 		try {
+			const jsonBody = JSON.stringify(recipeData);
+			console.log("JSON body being sent:", jsonBody);
+			console.log("JSON body type:", typeof jsonBody);
+			
 			const response = await fetch("/api/recipes", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify(recipeData),
+				body: jsonBody,
 			});
 
 			if (response.ok) {
@@ -158,9 +184,12 @@ export default function RecipeInsertPage() {
 				setCholesterol("");
 				setSodium("");
 			} else {
-				setApiError("Failed to insert recipe.");
+				const errorData = await response.json();
+				console.error("API Error:", errorData);
+				setApiError(`Failed to insert recipe: ${errorData.details || errorData.error || 'Unknown error'}`);
 			}
 		} catch (error) {
+			console.error("Network Error:", error);
 			setApiError("Error inserting recipe.");
 		}
 	};

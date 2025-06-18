@@ -3,10 +3,28 @@ import RecipeModel from "@/app/_lib/models/recipeModel";
 import { toSentenceCase } from "@/app/_lib/utils";
 import CommentsSection from "@/components/CommentSection";
 import InteractiveSection from "@/components/InteractiveSection";
+import { Suspense } from "react";
+import SimilarRecipesClientWrapper from "./SimilarRecipesClientWrapper";
 
 interface RecipePageProps {
 	params: { recipeId: string };
 }
+
+// Helper function to format nutrition data
+const formatNutrition = (nutrition: any[]): string[] => {
+	return nutrition.map((item) => {
+		if (typeof item === 'string') {
+			// Old format: just a string
+			return item;
+		} else if (item && typeof item === 'object' && item.name && item.value) {
+			// New format: object with name and value
+			return `${item.name}: ${item.value}`;
+		} else {
+			// Fallback for any other format
+			return String(item);
+		}
+	});
+};
 
 // Helper function to render key-value pairs, can be expanded
 const DetailItem: React.FC<{
@@ -38,6 +56,9 @@ export default async function UniqueRecipe({ params }: RecipePageProps) {
 			</div>
 		);
 	}
+
+	// Format nutrition data for display
+	const formattedNutrition = formatNutrition(recipe.nutrition || []);
 
 	return (
 		<div className="flex justify-center overflow-y-hidden">
@@ -87,9 +108,9 @@ export default async function UniqueRecipe({ params }: RecipePageProps) {
 							<h2 className="text-xl md:text-2xl font-semibold mb-3 text-pink-400 uppercase tracking-wider">
 								// Nutritional_Profile
 							</h2>
-							{recipe.nutrition && recipe.nutrition.length > 0 ? (
+							{formattedNutrition && formattedNutrition.length > 0 ? (
 								<ul className="list-none space-y-1">
-									{recipe.nutrition.map(
+									{formattedNutrition.map(
 										(nutrient: string, index: number) => (
 											<li
 												key={index}
@@ -179,6 +200,12 @@ export default async function UniqueRecipe({ params }: RecipePageProps) {
 								</ol>
 							</section>
 						)}
+
+					{/* Similar Recipes Section */}
+					<Suspense fallback={<div className="text-neutral-500">Loading similar recipes...</div>}>
+						<SimilarRecipesClientWrapper recipeId={params.recipeId} />
+					</Suspense>
+
 				</div>
 			</main>
 			<div>

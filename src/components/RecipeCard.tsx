@@ -6,7 +6,7 @@ interface Recipe {
 	name: string;
 	image: string;
 	ingredients: string[];
-	nutrition: string[];
+	nutrition: (string | { name: string; value: string })[];
 	mealType: string[];
 	dietaryRestrictions: string[];
 }
@@ -15,6 +15,22 @@ interface RecipeCardProps {
 	data: Recipe[];
 	selectedIngredients: string[];
 }
+
+// Helper function to format nutrition data
+const formatNutrition = (nutrition: any[]): string[] => {
+	return nutrition.map((item) => {
+		if (typeof item === 'string') {
+			// Old format: just a string
+			return item;
+		} else if (item && typeof item === 'object' && item.name && item.value) {
+			// New format: object with name and value
+			return `${item.name}: ${item.value}`;
+		} else {
+			// Fallback for any other format
+			return String(item);
+		}
+	});
+};
 
 const RecipeCard: React.FC<RecipeCardProps> = ({
 	data,
@@ -48,6 +64,9 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 								)
 					  ).length
 					: 0;
+
+				// Format nutrition data for display
+				const formattedNutrition = formatNutrition(recipe.nutrition || []);
 
 				return (
 					<Link
@@ -96,7 +115,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 							</div>
 							<div className="mb-2">
 								<ul className="list-none flex flex-col gap-0 list-inside">
-									{recipe.nutrition.map(
+									{formattedNutrition.map(
 										(nutrient: string, index: number) => (
 											<li
 												key={index}

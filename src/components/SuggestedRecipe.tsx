@@ -6,7 +6,7 @@ interface Recipe {
 	name: string;
 	image: string;
 	ingredients: string[];
-	nutrition: string[];
+	nutrition: (string | { name: string; value: string })[];
 	mealType: string[];
 	dietaryRestrictions: string[];
 }
@@ -16,6 +16,22 @@ interface RecipeCardProps {
 	col_count: number;
 	selectedIngredients: string[];
 }
+
+// Helper function to format nutrition data
+const formatNutrition = (nutrition: any[]): string[] => {
+	return nutrition.map((item) => {
+		if (typeof item === 'string') {
+			// Old format: just a string
+			return item;
+		} else if (item && typeof item === 'object' && item.name && item.value) {
+			// New format: object with name and value
+			return `${item.name}: ${item.value}`;
+		} else {
+			// Fallback for any other format
+			return String(item);
+		}
+	});
+};
 
 const RecipeCard: React.FC<RecipeCardProps> = ({ data, selectedIngredients }) => {
 	if (!data || data.length === 0) {
@@ -78,60 +94,65 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ data, selectedIngredients }) =>
 
 				const isDisabled = missingPercentage > 0.7;
 
+				// Format nutrition data for display
+				const formattedNutrition = formatNutrition(recipe.nutrition || []);
+
 				if (isDisabled) {
 					return (
 						<div
 							key={recipe._id}
+							className="group flex flex-col items-center sm:flex-row gap-4 border-2 border-neutral-700 bg-[rgba(0,0,0,0.6)] p-4 transition-all duration-300 ease-in-out backdrop-blur-sm rounded-none relative"
 							style={{
-								filter: `grayscale(${grayscaleValue}) blur(${blurValue}px)`,
-								opacity: opacityValue,
 								cursor: "not-allowed",
 								pointerEvents: "none",
 							}}
-							className="group flex flex-col items-center sm:flex-row gap-4 border-2 border-neutral-700 bg-[rgba(0,0,0,0.6)] p-4 transition-all duration-300 ease-in-out backdrop-blur-sm rounded-none relative"
 							title="Too many ingredients missing to view this recipe"
 						>
-							<img
-								src={recipe.image}
-								alt={`Booting image for ${recipe.name}`}
-								loading="lazy"
-								className="w-[200px] h-[200px] object-cover border-2 border-neutral-600 transition-all duration-300 ease-in-out"
+							<div
 								style={{
 									filter: `grayscale(${grayscaleValue}) blur(${blurValue}px)`,
 									opacity: opacityValue,
 								}}
-							/>
-							<div className="flex-grow">
-								<h2 className="text-lg md:text-xl font-bold text-pink-400 mb-2 uppercase tracking-wider break-words">
-									{recipe.name}
-								</h2>
-								<div className="mb-2">
-									<strong className="text-cyan-300 text-sm">
-										Intel Log // Ingredients:
-									</strong>
-									<ul className="list-inside list-none flex gap-1 flex-wrap mt-1">
-										{recipe.ingredients.slice(0, 4).map((ingredient, index) => (
-											<li
-												key={index}
-												className="border border-neutral-600 rounded-full text-xs px-2 py-0.5 text-neutral-400 transition-all">
-												{toSentenceCase(ingredient)}
-											</li>
-										))}
-										{recipe.ingredients.length > 5 && (
-											<li className="text-xs text-neutral-500">...more</li>
-										)}
-									</ul>
-								</div>
-								<div className="mb-2">
-									<ul className="list-none flex flex-col gap-0 list-inside">
-										{recipe.nutrition.map((nutrient: string, index: number) => (
-											<li
-												key={index}
-												className="py-0 px-1 text-xs md:text-sm text-green-400 font-mono break-words">
-												{`> ${nutrient}`}
-											</li>
-										))}
-									</ul>
+								className="w-full flex flex-col sm:flex-row items-center gap-4"
+							>
+								<img
+									src={recipe.image}
+									alt={`Booting image for ${recipe.name}`}
+									loading="lazy"
+									className="w-[200px] h-[200px] object-cover border-2 border-neutral-600 transition-all duration-300 ease-in-out"
+								/>
+								<div className="flex-grow">
+									<h2 className="text-lg md:text-xl font-bold text-pink-400 mb-2 uppercase tracking-wider break-words">
+										{recipe.name}
+									</h2>
+									<div className="mb-2">
+										<strong className="text-cyan-300 text-sm">
+											Intel Log // Ingredients:
+										</strong>
+										<ul className="list-inside list-none flex gap-1 flex-wrap mt-1">
+											{recipe.ingredients.slice(0, 4).map((ingredient, index) => (
+												<li
+													key={index}
+													className="border border-neutral-600 rounded-full text-xs px-2 py-0.5 text-neutral-400 transition-all">
+													{toSentenceCase(ingredient)}
+												</li>
+											))}
+											{recipe.ingredients.length > 5 && (
+												<li className="text-xs text-neutral-500">...more</li>
+											)}
+										</ul>
+									</div>
+									<div className="mb-2">
+										<ul className="list-none flex flex-col gap-0 list-inside">
+											{formattedNutrition.map((nutrient: string, index: number) => (
+												<li
+													key={index}
+													className="py-0 px-1 text-xs md:text-sm text-green-400 font-mono break-words">
+													{`> ${nutrient}`}
+												</li>
+											))}
+										</ul>
+									</div>
 								</div>
 							</div>
 							<div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center text-yellow-400 text-lg font-bold pointer-events-none">
@@ -185,7 +206,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ data, selectedIngredients }) =>
 							</div>
 							<div className="mb-2">
 								<ul className="list-none flex flex-col gap-0 list-inside">
-									{recipe.nutrition.map((nutrient: string, index: number) => (
+									{formattedNutrition.map((nutrient: string, index: number) => (
 										<li
 											key={index}
 											className="py-0 px-1 text-xs md:text-sm text-green-400 group-hover:text-green-300 font-mono break-words">

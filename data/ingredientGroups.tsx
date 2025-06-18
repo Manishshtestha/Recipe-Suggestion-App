@@ -3005,6 +3005,8 @@ const ingredientGroupsData = [
 			"vitamin e",
 			"corn extract",
 			"fish oil",
+			"black pepper",
+			"red onion",
 			"reishi mushroom",
 			"strawberry protein powder",
 			"grapefruit essential oil",
