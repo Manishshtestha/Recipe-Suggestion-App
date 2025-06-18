@@ -5,6 +5,7 @@ import CommentsSection from "@/components/CommentSection";
 import InteractiveSection from "@/components/InteractiveSection";
 import { Suspense } from "react";
 import SimilarRecipesClientWrapper from "./SimilarRecipesClientWrapper";
+import RecipeSpinner from "./RecipeSpinner";
 
 interface RecipePageProps {
 	params: { recipeId: string };
@@ -62,6 +63,7 @@ export default async function UniqueRecipe({ params }: RecipePageProps) {
 
 	return (
 		<div className="flex justify-center overflow-y-hidden">
+			<RecipeSpinner />
 			<main className=" h-[90vh] mt-10 overflow-y-scroll p-4 md:p-8 font-mono text-neutral-300">
 				<div className="recipe-container bg-opacity-70 backdrop-blur-sm border-2 border-neutral-700 p-6 md:p-8 max-w-5xl mx-auto rounded-none shadow-lg shadow-cyan-500/20">
 					<div className="recipe-header mt-6 mb-8 text-center">

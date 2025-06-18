@@ -5,6 +5,7 @@ import { AuthProvider } from "../_context/AuthContext";
 import "@/app/globals.css";
 import Particles from "@/components/Particles";
 import Navbar from "@/components/Navbar";
+import RouteSpinner from "@/components/RouteSpinner";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -30,6 +31,7 @@ export default function RootLayout({
 		<html lang="en">
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased relative min-h-screen bg-black`}>
+				<RouteSpinner />
 				<div className="grid h-screen w-full overflow-y-hidden">
 					<div className="col-start-1 col-end-2 row-start-1 row-end-2">
 						<Particles
