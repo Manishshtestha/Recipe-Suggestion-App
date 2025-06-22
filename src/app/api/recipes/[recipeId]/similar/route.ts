@@ -15,9 +15,21 @@ export async function GET(
 		return NextResponse.json({ error: "Recipe not found" }, { status: 404 });
 	}
 
-	// Find similar recipes by shared ingredients and same cooking method (excluding itself)
-	const similarRecipes = await RecipeModel.aggregate([
+	const pipeline: any = [
 		{ $match: { _id: { $ne: currentRecipe._id } } },
+	];
+
+	if (currentRecipe.dietaryRestrictions && currentRecipe.dietaryRestrictions.length > 0) {
+		pipeline.push({
+			$match: {
+				dietaryRestrictions: { $all: currentRecipe.dietaryRestrictions },
+			},
+		});
+	}
+
+	// Find similar recipes by shared ingredients (at least 50% match) and same cooking method (excluding itself)
+	const similarRecipes = await RecipeModel.aggregate([
+		...pipeline,
 		{
 			$addFields: {
 				sharedIngredients: {
@@ -29,9 +41,30 @@ export async function GET(
 					$cond: [
 						{ $eq: ["$cookingMethod", currentRecipe.cookingMethod] },
 						1,
-						0
-					]
-				}
+						0,
+					],
+				},
+			},
+		},
+		{
+			$match: {
+				$expr: {
+					$gte: [
+						{
+							$cond: {
+								if: { $eq: [{ $size: "$ingredients" }, 0] },
+								then: 0,
+								else: {
+									$divide: [
+										"$sharedIngredients",
+										{ $size: "$ingredients" },
+									],
+								},
+							},
+						},
+						0.5,
+					],
+				},
 			},
 		},
 		// Sort by sameCookingMethod first, then sharedIngredients
