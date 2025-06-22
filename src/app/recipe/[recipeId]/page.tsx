@@ -4,8 +4,9 @@ import { toSentenceCase } from "@/app/_lib/utils";
 import CommentsSection from "@/components/CommentSection";
 import InteractiveSection from "@/components/InteractiveSection";
 import { Suspense } from "react";
-import SimilarRecipesClientWrapper from "./SimilarRecipesClientWrapper";
 import RecipeSpinner from "./RecipeSpinner";
+import RecommendedRecipes from "@/components/RecommendedRecipes";
+import SimilarRecipes from "@/components/SimilarRecipes";
 
 interface RecipePageProps {
 	params: { recipeId: string };
@@ -203,9 +204,14 @@ export default async function UniqueRecipe({ params }: RecipePageProps) {
 							</section>
 						)}
 
+					{/* Recommendations Section */}
+					<Suspense fallback={<div className="text-neutral-500">Loading recommendations...</div>}>
+						<RecommendedRecipes recipeId={params.recipeId} />
+					</Suspense>
+
 					{/* Similar Recipes Section */}
 					<Suspense fallback={<div className="text-neutral-500">Loading similar recipes...</div>}>
-						<SimilarRecipesClientWrapper recipeId={params.recipeId} />
+						<SimilarRecipes recipeId={params.recipeId} />
 					</Suspense>
 
 				</div>

@@ -4,6 +4,7 @@ import IngredientsSelector from "@/src/../components/IngredientsSelector";
 import RecipeCard from "../../components/RecipeCard";
 import Searchbar from "../../components/Searchbar";
 import SuggestedRecipe from "../../components/SuggestedRecipe";
+import Fuse from "fuse.js";
 
 export default function Home() {
 	const [searchValue, setSearchValue] = useState(() => {
@@ -24,6 +25,30 @@ export default function Home() {
 	const [sortOption, setSortOption] = useState<
 		"most-matched" | "alphabetical" | "ingredient-count"
 	>("most-matched");
+
+	const invertedIndex = useMemo(() => {
+		const index: { [key: string]: any[] } = {};
+		recipes.forEach((recipe) => {
+			recipe.ingredients.forEach((ingredient: string) => {
+				const normalizedIngredient = ingredient.trim().toLowerCase();
+				if (!index[normalizedIngredient]) {
+					index[normalizedIngredient] = [];
+				}
+				index[normalizedIngredient].push(recipe);
+			});
+		});
+		return index;
+	}, [recipes]);
+
+	const fuse = useMemo(
+		() =>
+			new Fuse(recipes, {
+				keys: ["name", "ingredients"],
+				includeScore: true,
+				threshold: 0.4,
+			}),
+		[recipes]
+	);
 
 	useEffect(() => {
 		async function fetchRecipes() {
@@ -57,14 +82,10 @@ export default function Home() {
 
 	// Filtering logic for main recipe list
 	const filteredRecipes = useMemo(() => {
-		let filtered = recipes.filter((recipe) => {
-			const matchesSearch =
-				recipe.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-				recipe.ingredients.some((ingredient: string) =>
-					ingredient.toLowerCase().includes(searchValue.toLowerCase())
-				);
-			return matchesSearch;
-		});
+		let filtered =
+			searchValue.length > 2
+				? fuse.search(searchValue).map((result) => result.item)
+				: recipes;
 
 		// Apply sorting based on sortOption
 		if (sortOption === "alphabetical") {
@@ -93,21 +114,20 @@ export default function Home() {
 		}
 
 		return filtered;
-	}, [recipes, searchValue, sortOption, selectedIngredients]);
+	}, [recipes, searchValue, sortOption, selectedIngredients, fuse]);
 
 	// Filtering and sorting logic for suggested recipes based on selected ingredients
 	const filteredSuggestedRecipes = useMemo(() => {
-		// Filter recipes that include at least one selected ingredient
-		let filtered = recipes.filter((recipe) =>
-			selectedIngredientsLowerTrimmed.some((selectedIngredient) =>
-				recipe.ingredients.some((recipeIngredient: string) =>
-					recipeIngredient
-						.trim()
-						.toLowerCase()
-						.includes(selectedIngredient)
-				)
-			)
-		);
+		// Use the inverted index for fast filtering
+		const matchedRecipes = new Map();
+		selectedIngredientsLowerTrimmed.forEach((ingredient) => {
+			const recipesForIngredient = invertedIndex[ingredient] || [];
+			recipesForIngredient.forEach((recipe) => {
+				matchedRecipes.set(recipe._id, recipe);
+			});
+		});
+
+		let filtered = Array.from(matchedRecipes.values());
 
 		// Apply sorting based on sortOption
 		if (sortOption === "alphabetical") {
@@ -133,7 +153,11 @@ export default function Home() {
 		}
 
 		return filtered;
-	}, [recipes, selectedIngredientsLowerTrimmed, sortOption]);
+	}, [
+		invertedIndex,
+		selectedIngredientsLowerTrimmed,
+		sortOption,
+	]);
 
 	return (
 		<div className="flex w-full">

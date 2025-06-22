@@ -1,8 +1,9 @@
 "use client";
-import { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
+import { useState, useEffect, useRef, Dispatch, SetStateAction, useMemo } from "react";
 import Link from "next/link"; // Keep Link if you plan to add internal links here, otherwise it can be removed.
 import { toTitleCase } from "@/app/_lib/utils";
 import { uniqueIngredients } from "@/../data/ingredientGroups";
+import Fuse from "fuse.js";
 
 interface IngredientsSelectorProps {
   selectedIngredients: string[];
@@ -82,18 +83,28 @@ const IngredientsSelector: React.FC<IngredientsSelectorProps> = ({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
+  const fuse = useMemo(
+    () =>
+      new Fuse(uniqueIngredients, {
+        includeScore: true,
+        threshold: 0.4,
+      }),
+    []
+  );
+
   useEffect(() => {
     if (inputValue.trim() === "") {
       setFilteredSuggestions([]);
       setShowSuggestions(false);
       return;
     }
-    const filtered = uniqueIngredients.filter((ingredient) =>
-      ingredient.toLowerCase().startsWith(inputValue.toLowerCase())
-    );
+    const filtered = fuse
+      .search(inputValue)
+      .map((result) => result.item)
+      .slice(0, 10); // Limit suggestions for performance
     setFilteredSuggestions(filtered);
     setShowSuggestions(filtered.length > 0);
-  }, [inputValue]);
+  }, [inputValue, fuse]);
 
   const addIngredient = (ingredient: string) => {
     if (!selectedIngredients.includes(ingredient)) {

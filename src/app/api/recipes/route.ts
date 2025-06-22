@@ -1,15 +1,54 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/app/_lib/mongoose";
 import RecipeModel from "@/app/_lib/models/recipeModel";
+import { LRUCache } from "lru-cache";
 
-export async function GET() {
-  await dbConnect();
-  try {
-    const recipes = await RecipeModel.find({});
-    return NextResponse.json(recipes, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch recipes" }, { status: 500 });
-  }
+// Initialize LRU Cache
+const options = {
+	max: 100, // Max number of items in cache
+	ttl: 1000 * 60 * 5, // 5 minutes TTL
+};
+const cache = new LRUCache(options);
+
+export async function GET(request: NextRequest) {
+	await dbConnect();
+	try {
+		const url = new URL(request.url);
+		const page = url.searchParams.get("page");
+		const limit = url.searchParams.get("limit");
+
+		// If pagination parameters are provided, use the cached, paginated logic
+		if (page && limit) {
+			const pageNum = parseInt(page);
+			const limitNum = parseInt(limit);
+			const skip = (pageNum - 1) * limitNum;
+
+			const cacheKey = `recipes_page=${pageNum}_limit=${limitNum}`;
+
+			if (cache.has(cacheKey)) {
+				return NextResponse.json(cache.get(cacheKey), { status: 200 });
+			}
+
+			const recipes = await RecipeModel.find({}).skip(skip).limit(limitNum);
+			const totalRecipes = await RecipeModel.countDocuments();
+			const responseData = {
+				recipes,
+				totalRecipes,
+			};
+			cache.set(cacheKey, responseData);
+			return NextResponse.json(responseData, { status: 200 });
+		}
+
+		// If no pagination, fetch all recipes (for landing page)
+		const recipes = await RecipeModel.find({});
+		return NextResponse.json(recipes, { status: 200 });
+
+	} catch (error) {
+		return NextResponse.json(
+			{ error: "Failed to fetch recipes" },
+			{ status: 500 }
+		);
+	}
 }
 
 export async function POST(request: NextRequest) {
@@ -58,6 +97,9 @@ export async function POST(request: NextRequest) {
     }
 
     await newRecipe.save();
+
+    // Invalidate cache since data has changed
+    cache.clear();
 
     return NextResponse.json(newRecipe, { status: 201 });
   } catch (error) {

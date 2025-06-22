@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import RecipeCard from "@/components/RecipeCard";
-import RecipeCardSkeleton from "./RecipeCardSkeleton";
+import RecipeCardSkeleton from "./RecipeCardSkeleton"; // Assuming a skeleton loader exists
 
 interface Recipe {
 	_id: string;
@@ -13,8 +13,8 @@ interface Recipe {
 	dietaryRestrictions: string[];
 }
 
-const SimilarRecipes = ({ recipeId }: { recipeId: string }) => {
-	const [similarRecipes, setSimilarRecipes] = useState<Recipe[]>([]);
+const RecommendedRecipes = ({ recipeId }: { recipeId: string }) => {
+	const [recommendedRecipes, setRecommendedRecipes] = useState<Recipe[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
@@ -23,17 +23,17 @@ const SimilarRecipes = ({ recipeId }: { recipeId: string }) => {
 
 		setLoading(true);
 		setError(null);
-		fetch(`/api/recipes/${recipeId}/similar`)
+		fetch(`/api/recipes/${recipeId}/recommendations`)
 			.then((res) => {
-				if (!res.ok) throw new Error("Failed to fetch similar recipes");
+				if (!res.ok) throw new Error("Failed to fetch recommendations");
 				return res.json();
 			})
 			.then((data) => {
-				setSimilarRecipes(data);
+				setRecommendedRecipes(data);
 				setLoading(false);
 			})
 			.catch((err) => {
-				console.error("Error fetching similar recipes:", err);
+				console.error("Error fetching recommendations:", err);
 				setError(err.message);
 				setLoading(false);
 			});
@@ -42,8 +42,8 @@ const SimilarRecipes = ({ recipeId }: { recipeId: string }) => {
 	if (loading) {
 		return (
 			<section className="mt-8">
-				<h2 className="text-xl md:text-2xl font-semibold mb-4 text-pink-400 uppercase tracking-wider">
-					Similar Recipes
+				<h2 className="text-xl md:text-2xl font-semibold mb-4 text-cyan-400 uppercase tracking-wider">
+					You Might Also Like
 				</h2>
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					<RecipeCardSkeleton />
@@ -54,18 +54,18 @@ const SimilarRecipes = ({ recipeId }: { recipeId: string }) => {
 	}
 
 	if (error) return <div className="text-red-400">{error}</div>;
-	if (!similarRecipes.length) {
-		return <div className="text-neutral-500 mt-8">No similar recipes found.</div>;
+	if (!recommendedRecipes.length) {
+		return <div className="text-neutral-500 mt-8">No specific recommendations found.</div>;
 	}
 
 	return (
 		<section className="mt-8">
-			<h2 className="text-xl md:text-2xl font-semibold mb-4 text-pink-400 uppercase tracking-wider">
-				Similar Recipes
+			<h2 className="text-xl md:text-2xl font-semibold mb-4 text-cyan-400 uppercase tracking-wider">
+				You Might Also Like
 			</h2>
-			<RecipeCard data={similarRecipes} selectedIngredients={[]} />
+			<RecipeCard data={recommendedRecipes} selectedIngredients={[]} />
 		</section>
 	);
 };
 
-export default SimilarRecipes; 
+export default RecommendedRecipes; 

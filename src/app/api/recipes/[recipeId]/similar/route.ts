@@ -15,23 +15,49 @@ export async function GET(
 		return NextResponse.json({ error: "Recipe not found" }, { status: 404 });
 	}
 
-	const pipeline: any = [
+	// Create a regex from important words in the recipe name to find similar titles
+	const nameKeywords = currentRecipe.name
+		.split(" ")
+		.filter((word) => word.length > 3) // Filter out short/common words
+		.join("|");
+
+	const aggregationPipeline: any[] = [
+		// Exclude the current recipe
 		{ $match: { _id: { $ne: currentRecipe._id } } },
 	];
 
-	if (currentRecipe.dietaryRestrictions && currentRecipe.dietaryRestrictions.length > 0) {
-		pipeline.push({
+	// Filter by dietary restrictions if they exist
+	if (
+		currentRecipe.dietaryRestrictions &&
+		currentRecipe.dietaryRestrictions.length > 0
+	) {
+		aggregationPipeline.push({
 			$match: {
 				dietaryRestrictions: { $all: currentRecipe.dietaryRestrictions },
 			},
 		});
 	}
 
-	// Find similar recipes by shared ingredients (at least 50% match) and same cooking method (excluding itself)
-	const similarRecipes = await RecipeModel.aggregate([
-		...pipeline,
+	// Add fields for scoring and sorting
+	aggregationPipeline.push(
 		{
 			$addFields: {
+				nameScore:
+					nameKeywords
+						? {
+								$cond: {
+									if: {
+										$regexMatch: {
+											input: "$name",
+											regex: nameKeywords,
+											options: "i",
+										},
+									},
+									then: 1,
+									else: 0,
+								},
+						  }
+						: 0,
 				sharedIngredients: {
 					$size: {
 						$setIntersection: ["$ingredients", currentRecipe.ingredients],
@@ -46,31 +72,18 @@ export async function GET(
 				},
 			},
 		},
+		// Sort by name similarity, then shared ingredients, then cooking method
 		{
-			$match: {
-				$expr: {
-					$gte: [
-						{
-							$cond: {
-								if: { $eq: [{ $size: "$ingredients" }, 0] },
-								then: 0,
-								else: {
-									$divide: [
-										"$sharedIngredients",
-										{ $size: "$ingredients" },
-									],
-								},
-							},
-						},
-						0.5,
-					],
-				},
+			$sort: {
+				nameScore: -1,
+				sharedIngredients: -1,
+				sameCookingMethod: -1,
 			},
 		},
-		// Sort by sameCookingMethod first, then sharedIngredients
-		{ $sort: { sameCookingMethod: -1, sharedIngredients: -1 } },
-		{ $limit: 5 },
-	]);
+		{ $limit: 5 }
+	);
+
+	const similarRecipes = await RecipeModel.aggregate(aggregationPipeline);
 
 	return NextResponse.json(similarRecipes, { status: 200 });
 }
